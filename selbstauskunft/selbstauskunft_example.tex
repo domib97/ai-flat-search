@@ -1,0 +1,69 @@
+%% Mieterselbstauskunft - [YOUR_NAME]
+%% Canonical, mostly-static self-disclosure form.
+%% Only Section 5 (move-in date / household framing) typically changes per listing -
+%% everything else should stay identical to 01-renter-profile.md across every inquiry.
+%%
+%% SETUP: Run /setup to populate this with your actual information.
+%% Compile with: lualatex selbstauskunft_example.tex
+
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{parskip}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\definecolor{accent}{HTML}{2F5C8A}
+
+\newcommand{\formsection}[1]{{\large\bfseries\color{accent}#1}\par\vspace{2pt}\hrule\vspace{6pt}}
+\newcommand{\field}[2]{\textbf{#1:} #2\\[2pt]}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+{\Large\bfseries Mieterselbstauskunft}\\[2pt]
+[YOUR_NAME]
+\end{center}
+\vspace{8pt}
+
+\formsection{1. Persönliche Daten}
+\field{Name, Vorname}{[LAST_NAME], [FIRST_NAME]}
+\field{Geburtsdatum}{[YOUR_DOB]}
+\field{Aktuelle Anschrift}{[YOUR_CURRENT_ADDRESS]}
+\field{Telefon}{[YOUR_PHONE]}
+\field{E-Mail}{[YOUR_EMAIL]}
+
+\formsection{2. Beruf und Einkommen}
+\field{Beruf}{[JOB_TITLE]}
+\field{Arbeitgeber}{[NEW_EMPLOYER], Sankt Leon-Rot}
+\field{Beschäftigungsverhältnis}{[unbefristet/befristet seit/ab DATUM]}
+\field{Nettoeinkommen (monatlich)}{[YOUR_NET_INCOME]}
+
+\formsection{3. Haushalt}
+\field{Anzahl einziehender Personen}{[N]}
+\field{Haustiere}{[NONE_OR_DESCRIBE]}
+\field{Raucher}{[Nein/Ja]}
+
+\formsection{4. Bonität}
+\field{Schufa-Bonitätsauskunft}{[liegt vor / wird nachgereicht]}
+\field{Mietschuldenfreiheitsbescheinigung}{[liegt vor / wird nachgereicht]}
+\field{Bisherige Mietdauer am aktuellen Wohnsitz}{[YEARS]}
+\field{Mietrückstände}{Keine}
+
+\formsection{5. Angaben zum gewünschten Mietverhältnis}
+\field{Gewünschter Einzugstermin}{[DESIRED_MOVE_IN_DATE]}
+\field{Grund des Umzugs}{Neue Arbeitsstelle bei [NEW_EMPLOYER] in Sankt Leon-Rot ab [START_DATE]}
+
+\vspace{14pt}
+\formsection{Erklärung}
+Ich versichere, dass die obigen Angaben der Wahrheit entsprechen.
+\vspace{24pt}
+
+\noindent
+\makebox[6cm]{\hrulefill} \hfill \makebox[6cm]{\hrulefill}\\
+\makebox[6cm][l]{Ort, Datum} \hfill \makebox[6cm][l]{Unterschrift}
+
+\end{document}

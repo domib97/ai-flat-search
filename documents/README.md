@@ -1,6 +1,6 @@
 # Documents Folder
 
-This folder holds your actual career documents. The `/setup` command reads everything here and uses it to populate the candidate skill files under `.claude/skills/job-application-assistant/`. It is safe to re-run `/setup` as you add new documents — it merges intelligently and will never overwrite existing content without asking you first.
+This folder holds your actual renter documents. The `/setup` command reads everything here and uses it to populate the renter profile files under `.claude/skills/flat-application-assistant/`. It is safe to re-run `/setup` as you add new documents — it merges intelligently and will never overwrite existing content without asking you first.
 
 ---
 
@@ -8,141 +8,117 @@ This folder holds your actual career documents. The `/setup` command reads every
 
 ```
 documents/
-├── cv/                          # Your CV files (PDF or LaTeX)
-├── linkedin/                    # LinkedIn profile export (PDF)
-├── diplomas/                    # Degree certificates and transcripts
-├── references/                  # Reference letters
-├── applications/                # Past job applications
-│   └── <company>_<role>/
-│       ├── job_posting.md       # The original job posting (paste as text)
-│       ├── cover_letter.tex     # The cover letter you submitted
-│       ├── cv_draft.tex         # The CV variant you submitted
+├── income/                      # Payslips, proof of income
+├── employer/                    # New job contract / offer letter (Sankt Leon-Rot employer)
+├── credit/                      # Schufa-Bonitätsauskunft
+├── landlord_refs/               # Previous landlord references / Mietschuldenfreiheitsbescheinigung
+├── inquiries/                   # Past flat inquiries
+│   └── <address-slug>/
+│       ├── listing.md           # The original listing text (paste as text)
+│       ├── anschreiben.tex      # The Anschreiben you sent
 │       └── outcome.md           # Result + notes (fill in after hearing back)
 └── README.md                    # This file
 ```
 
 ---
 
-## cv/
+## income/
 
-Your master CV — the most complete, unedited version of your professional record.
-
-**Supported formats:** `.pdf`, `.tex`
-
-**What `/setup` extracts:**
-- Work experience (titles, companies, dates, bullet points)
-- Education (degrees, institutions, dates, thesis topics)
-- Technical skills
-- Awards and publications
-- Contact information
-
-**Naming:** Any filename works. If multiple files are present, `/setup` reads all of them and cross-references for consistency.
-
-**Tip:** Keep your most comprehensive CV here (not a tailored variant). The skill files are the canonical source — tailored CVs are generated per application by `/apply`.
-
----
-
-## linkedin/
-
-Your LinkedIn profile exported as a PDF.
-
-**How to export:** On LinkedIn, go to your profile → More → Save to PDF. This exports a structured summary of your profile.
-
-**Supported formats:** `.pdf`
-
-**What `/setup` extracts:**
-- Work experience and dates (cross-referenced against your CV)
-- Skills and endorsements
-- Education
-- Certifications and licenses
-- Volunteer work
-- Publications
-- About/summary section (used to infer behavioral profile additions)
-- Recommendations received (may enrich reference context)
-
-**Naming:** Any filename works. Only one LinkedIn export is expected; if multiple are present, `/setup` uses the most recently modified one.
-
----
-
-## diplomas/
-
-Degree certificates, transcripts, and any official qualifications.
-
-**Supported formats:** `.pdf`
-
-**What `/setup` extracts:**
-- Degree titles and official names (used to verify education entries)
-- Graduation dates
-- Grades or distinctions (if visible)
-- Institution names (official spelling)
-
-**Naming:** Use descriptive names, e.g. `msc_physics_ucph_2025.pdf`, `bsc_physics_ucph_2016.pdf`. Naming does not affect parsing.
-
----
-
-## references/
-
-Reference letters from former managers, supervisors, or collaborators.
+Proof of income for the new job (or current job, if income is unchanged): payslips (Gehaltsabrechnungen), or an employer letter stating salary.
 
 **Supported formats:** `.pdf`, `.txt`, `.md`
 
 **What `/setup` extracts:**
-- Referee name, title, and organization
-- Specific quotes and assessments (added to the references section of `01-candidate-profile.md`)
-- Competency language used by referees (adds behavioral signal to `02-behavioral-profile.md`)
+- Net monthly income
+- Employer name (cross-referenced against `employer/`)
+- Pay period / contract type
 
-**Naming:** Use the referee's name, e.g. `reference_ole_frandsen.pdf`.
+**Naming:** Any filename works. If multiple files are present, `/setup` reads all of them and cross-references for consistency.
 
 ---
 
-## applications/
+## employer/
 
-A record of past job applications. Each subfolder is one application.
+The new job's contract or offer letter — the document that actually explains the move.
 
-**Subfolder naming:** `<company>_<role>` — lowercase, underscores for spaces.
+**Supported formats:** `.pdf`, `.txt`, `.md`
+
+**What `/setup` extracts:**
+- Job title
+- Employer name and Sankt Leon-Rot as the work location
+- Contract type (unbefristet/befristet, Probezeit)
+- Start date
+
+**Naming:** Any filename works.
+
+---
+
+## credit/
+
+Your Schufa-Bonitätsauskunft, if you've already obtained one.
+
+**Supported formats:** `.pdf`
+
+**What `/setup` extracts:**
+- Date the Schufa-Auskunft was issued
+- Any summary score visible
+
+**Naming:** Any filename works.
+
+---
+
+## landlord_refs/
+
+References from a previous or current landlord: a reference letter, or a Mietschuldenfreiheitsbescheinigung (confirmation of no outstanding rent).
+
+**Supported formats:** `.pdf`, `.txt`, `.md`
+
+**What `/setup` extracts:**
+- Previous landlord name and contact (optional, for the references section)
+- Tenancy dates
+- Confirmation of no arrears
+
+**Naming:** Use a descriptive name, e.g. `mietschuldenfreiheit_mustermann.pdf`.
+
+---
+
+## inquiries/
+
+A record of past flat inquiries. Each subfolder is one listing you wrote to.
+
+**Subfolder naming:** `<address-slug>` — lowercase, underscores for spaces, e.g. `musterstrasse_12_karlsruhe`.
 
 Examples:
 ```
-applications/
-├── acme_ml_engineer/
-├── bigcorp_software_engineer/
-└── consultco_ai_consultant/
+inquiries/
+├── musterstrasse_12_karlsruhe/
+├── hauptstrasse_5_heidelberg/
+└── bahnhofstrasse_3_bruchsal/
 ```
 
-### Files within each application folder
+### Files within each inquiry folder
 
-**`job_posting.md`** — Paste the full job posting text here. Used by `/setup` to infer which skills and role types you have targeted, and to calibrate `04-job-evaluation.md`.
+**`listing.md`** — Paste the full listing text here. Used by `/setup` to refine `04-flat-evaluation.md` over time (which listings actually fit, which didn't).
 
-**`cover_letter.tex`** — The cover letter you actually submitted. Used to extract writing style patterns and structure for `06-cover-letter-templates.md`.
+**`anschreiben.tex`** — The Anschreiben you actually sent. Used to check writing-style consistency.
 
-**`cv_draft.tex`** — The CV variant you submitted. Used to extract profile statement styles for `05-cv-templates.md`.
-
-**`outcome.md`** — Fill this in after the application resolves. Format:
+**`outcome.md`** — Fill this in after the inquiry resolves. Format:
 
 ```markdown
-# Outcome: <Company> — <Role>
+# Outcome: <Address>
 
-**Status:** hired | offer_declined | rejected | no_response | interview_only
+**Status:** viewing_offered | rejected | no_response | signed
 
 **Date resolved:** YYYY-MM-DD
 
-## Interview stages reached
-- [ ] Phone screen
-- [ ] Technical interview
-- [ ] Case interview
-- [ ] Final round
-- [ ] Offer received
-
 ## Notes
-What happened? What feedback did you receive (if any)?
-What would you do differently?
-Any signal about what they valued or didn't?
+What happened? Did the landlord give feedback (e.g. "too many applicants", "went with someone local")?
+Was the listing still actually available when you wrote in, or already gone?
 ```
 
 **What `/setup` learns from outcome.md:**
-- Which role types and companies have led to interviews (signals strong fit areas)
-- Which applications did not progress (informs the experience match calibration in `04-job-evaluation.md`)
-- Interview feedback, if you recorded it, can surface new STAR candidates
+- Whether income-strong applications are still losing out (signals competition volume rather than profile weakness)
+- Whether listings are commonly already gone by the time you write in (signals the search needs to run more frequently or target fresher listings)
 
 ---
 
@@ -151,9 +127,7 @@ Any signal about what they valued or didn't?
 | Format | Readable by `/setup` | Notes |
 |--------|--------------------------|-------|
 | `.pdf` | Yes | Parsed directly with the Read tool |
-| `.tex` | Yes | LaTeX source — structure and content both readable |
-| `.md` | Yes | Plain text |
-| `.txt` | Yes | Plain text |
+| `.md` / `.txt` | Yes | Plain text |
 | `.docx` | No | Convert to PDF before placing here |
 | `.png` / `.jpg` | No | Scanned documents won't be parsed — use text PDFs |
 
@@ -163,13 +137,19 @@ Any signal about what they valued or didn't?
 
 The command is designed to be re-run as your document collection grows. Each run:
 
-1. Reads the current state of all skill files
+1. Reads the current state of `01-renter-profile.md` and `02-tenant-profile.md`
 2. Compares extracted document content against what's already there
 3. Only proposes changes for content that is genuinely new or conflicting
 4. Never silently overwrites — conflicts are shown explicitly for your decision
 
 **When to re-run:**
-- After adding a new LinkedIn export
-- After adding reference letters
-- After recording outcomes for completed applications
-- After updating your master CV
+- After obtaining your Schufa-Bonitätsauskunft
+- After receiving your signed employment contract
+- After recording outcomes for inquiries you've sent
+- After your income or household situation changes
+
+---
+
+## A note on sensitive documents
+
+Everything in this folder (besides this README and the folder structure) is personal financial and identity data and is excluded from git via `.gitignore`. Do not commit it, and be mindful about which Anschreiben/Selbstauskunft drafts you send where — never send the original Schufa/payslip files to anyone other than a landlord you're actually applying to.

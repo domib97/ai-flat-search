@@ -1,6 +1,6 @@
-# /reset - Reset Candidate Profile Data
+# /reset - Reset Renter Profile Data
 
-You are resetting parts of the job search framework back to a blank state so the user can start fresh with `/setup`.
+You are resetting parts of the flat search framework back to a blank state so the user can start fresh with `/setup`.
 
 **This command is destructive.** Nothing is deleted until the user explicitly confirms. Follow these steps exactly in order.
 
@@ -10,7 +10,7 @@ You are resetting parts of the job search framework back to a blank state so the
 
 Check `$ARGUMENTS` for a scope keyword:
 
-- `profile` — clears candidate profile data from skill files only
+- `profile` — clears renter profile data from skill files only
 - `documents` — deletes user-provided files from the `documents/` folder only
 - `all` — both of the above
 
@@ -18,9 +18,9 @@ If `$ARGUMENTS` is empty or does not contain a recognized scope keyword, ask:
 
 > **What would you like to reset?**
 >
-> - **`profile`** — Clears candidate data from the skill files (profile, behavioral, STAR examples, profile statements). The framework structure and writing rules are preserved. Use this to re-run `/setup` from scratch.
+> - **`profile`** — Clears your renter and tenant profile data (identity, household, income, search criteria specifics). The search defaults (target areas, budget, workplace) and framework structure are preserved.
 >
-> - **`documents`** — Deletes all files you've placed in the `documents/` folder (CV PDFs, LinkedIn export, diplomas, references, past applications). The folder structure and `README.md` are preserved.
+> - **`documents`** — Deletes all files you've placed in the `documents/` folder (income proof, employer letter, Schufa, landlord references, past inquiries). The folder structure and `README.md` are preserved.
 >
 > - **`all`** — Both of the above.
 >
@@ -32,60 +32,62 @@ Wait for the user's response before continuing.
 
 ## Step 1: Show Exactly What Will Be Cleared
 
-Before doing anything, show the user precisely what will be wiped.
-
 ### If scope includes `profile`:
 
-Read the current state of these files and report whether each has content or is already empty:
+Read the current state of these files and report whether each has content or is already a blank/placeholder template:
 
-- `.claude/skills/job-application-assistant/01-candidate-profile.md`
-- `.claude/skills/job-application-assistant/02-behavioral-profile.md`
-- `.claude/skills/job-application-assistant/05-cv-templates.md` *(profile statements section only — framework structure is preserved)*
-- `.claude/skills/job-application-assistant/07-interview-prep.md` *(STAR examples and STAR candidates sections only — framework structure is preserved)*
+- `.claude/skills/flat-application-assistant/01-renter-profile.md`
+- `.claude/skills/flat-application-assistant/02-tenant-profile.md`
+- `.claude/skills/flat-application-assistant/04-flat-evaluation.md` *(the `[YOUR_MAX_COMMUTE]` placeholder only — scoring framework and weighting are preserved)*
+- `.claude/skills/flat-scraper/search-criteria.md` *(the `[YOUR_MAX_COMMUTE]` placeholder only — portal list and query structure are preserved)*
+- `CLAUDE.md` *(renter profile section only — workflow and verification checklist are preserved)*
 
 Present as:
 
 ```
 ## Profile reset will clear:
 
-- 01-candidate-profile.md — [has content / already empty]
+- 01-renter-profile.md — [has content / already a placeholder template]
   Full file will be replaced with a blank template.
 
-- 02-behavioral-profile.md — [has content / already empty]
+- 02-tenant-profile.md — [has content / already a placeholder template]
   Full file will be replaced with a blank template.
 
-- 05-cv-templates.md — [has profile statements / already blank]
-  Profile statement templates will be cleared. LaTeX structure and tailoring guidelines are preserved.
+- 04-flat-evaluation.md — [commute filled in / already a placeholder]
+  [YOUR_MAX_COMMUTE] will be reset to a placeholder. Scoring framework preserved.
 
-- 07-interview-prep.md — [has STAR examples / already blank]
-  STAR examples and any STAR candidate stubs will be cleared. Framework, tough questions, and roleplay guidelines are preserved.
+- search-criteria.md — [commute filled in / already a placeholder]
+  [YOUR_MAX_COMMUTE] will be reset to a placeholder. Portal list and queries preserved.
 
-The following files are NOT touched (they contain framework rules, not candidate data):
+- CLAUDE.md — Renter Profile section will be reset to placeholders.
+
+The following files are NOT touched (they contain framework rules, not personal data):
   - 03-writing-style.md
-  - 04-job-evaluation.md
-  - 06-cover-letter-templates.md
+  - 05-selbstauskunft-templates.md
+  - 06-anschreiben-templates.md
+  - 07-besichtigung-prep.md
 ```
 
 ### If scope includes `documents`:
 
-Use Glob to list all files present in `documents/cv/`, `documents/linkedin/`, `documents/diplomas/`, `documents/references/`, and `documents/applications/`. Present as:
+Use Glob to list all files present in `documents/income/`, `documents/employer/`, `documents/credit/`, `documents/landlord_refs/`, and `documents/inquiries/`. Present as:
 
 ```
 ## Documents reset will delete:
 
-documents/cv/
+documents/income/
   - [filename] or "(empty)"
 
-documents/linkedin/
+documents/employer/
   - [filename] or "(empty)"
 
-documents/diplomas/
+documents/credit/
   - [filename] or "(empty)"
 
-documents/references/
+documents/landlord_refs/
   - [filename] or "(empty)"
 
-documents/applications/
+documents/inquiries/
   - [subfolder/filename] or "(empty)"
 
 documents/README.md — NOT deleted (instructions file)
@@ -114,86 +116,68 @@ Wait for the user's response.
 
 ### Profile reset
 
-**For `01-candidate-profile.md`**, replace the file content with:
+**For `01-renter-profile.md`**, replace the file content with:
 
 ```markdown
-# Candidate Profile
+# Renter Profile
 
 <!-- Run /setup to populate this file -->
 
 ## Identity
 
-## Education
+## Household
 
-## Professional Experience
+## Employment & Income
 
-## Independent Projects
+## Creditworthiness & Rental History
 
-## Technical Skills
-
-## Publications
-
-## Awards
+## Search Profile
 
 ## References
+
+## Past Inquiries
 ```
 
-**For `02-behavioral-profile.md`**, replace the file content with:
+**For `02-tenant-profile.md`**, replace the file content with:
 
 ```markdown
-# Behavioral Profile
+# Tenant Profile
 
 <!-- Run /setup to populate this file -->
 
 ## Overview
 
-## Strongest Behavioral Traits
+## Core Traits Landlords Screen For
 
-## How I Work Best
+## Strongest Selling Points
 
-## Growth Areas
+## How You Come Across
 
-## Mapping to Job Posting Language
+## Things to Address Proactively
 
-## Management Style Preferences
+## Mapping to Listing Language
 
-## Using This in Applications
+## Landlord/Agent Interaction Preferences
+
+## Using This in Anschreiben
 ```
 
-**For `05-cv-templates.md`**, locate the section that begins with `**Profile statement templates` and extends through the role-specific template blocks. Replace only that section with:
+**For `04-flat-evaluation.md`**, locate every occurrence of a filled-in commute value in the "Commute Fit" sections and replace with `[YOUR_MAX_COMMUTE]`. Leave the rest of the file (scoring tables, weighting, thresholds) intact.
 
-```markdown
-**Profile statement templates:**
+**For `search-criteria.md`**, locate the filled-in commute value under "Max commute" and replace with `[YOUR_MAX_COMMUTE]`. Leave portal lists and queries intact.
 
-<!-- Run /setup to populate role-specific profile statements -->
-```
-
-Leave all other content in `05-cv-templates.md` intact.
-
-**For `07-interview-prep.md`**, locate and remove:
-- The entire `## Ready-Made STAR Examples` section and all numbered STAR examples under it
-- Any `## STAR Candidates (Complete Manually)` section added by `/setup` Path A
-
-Replace with:
-
-```markdown
-## Ready-Made STAR Examples
-
-<!-- Run /setup to populate STAR examples from your actual experience -->
-```
-
-Leave all other content in `07-interview-prep.md` intact (STAR format explanation, tough questions, questions to ask interviewers, phone/video tips, follow-up etiquette, roleplay guidelines).
+**For `CLAUDE.md`**, replace the content of the "## Renter Profile" section (down to, but not including, "## Repo Structure") with the placeholder version shown in the framework's original template (all `[PLACEHOLDER]` tokens).
 
 ### Documents reset
 
 For each non-empty document subfolder, delete all files within it using Bash `rm`. Do not delete the folder itself, and do not delete `documents/README.md`.
 
 ```bash
-rm -f documents/cv/*
-rm -f documents/linkedin/*
-rm -f documents/diplomas/*
-rm -f documents/references/*
-rm -rf documents/applications/*/
+rm -f documents/income/*
+rm -f documents/employer/*
+rm -f documents/credit/*
+rm -f documents/landlord_refs/*
+rm -rf documents/inquiries/*/
 ```
 
 ---
@@ -215,10 +199,10 @@ After the reset is complete, report:
 Then tell the user what to do next based on what was reset:
 
 **If profile was reset:**
-> Your candidate profile is now blank. Run `/setup` to repopulate it. The command auto-detects any files in your `documents/` folder and offers to read from there; otherwise it walks you through a CV import or interactive interview.
+> Your renter profile is now blank. Run `/setup` to repopulate it. The command auto-detects any files in your `documents/` folder and offers to read from there; otherwise it walks you through pasting your details or an interactive interview.
 
 **If documents were reset:**
-> The `documents/` folder is now empty. Add your career documents and run `/setup` to populate your profile. See `documents/README.md` for instructions on what to put where.
+> The `documents/` folder is now empty. Add your income proof, employer letter, Schufa, and landlord references, and run `/setup` to populate your profile. See `documents/README.md` for instructions on what to put where.
 
 **If both were reset:**
-> Both your profile files and documents folder are now empty. Add documents to `documents/` (or skip and use the CV import / interview path), then run `/setup`.
+> Both your profile files and documents folder are now empty. Add documents to `documents/` (or skip and paste your details / use the interview), then run `/setup`.

@@ -1,6 +1,6 @@
 # Setup Guide
 
-Step-by-step instructions for getting the AI Job Search framework running.
+Step-by-step instructions for getting the AI Flat Search framework running.
 
 ## 1. Prerequisites
 
@@ -14,23 +14,7 @@ npm install -g @anthropic-ai/claude-code
 
 You'll need an Anthropic API key or a Claude Pro/Team subscription. See the [Claude Code docs](https://docs.anthropic.com/en/docs/claude-code) for details.
 
-### Python
-
-Python 3.10+ is required for the salary lookup tool. Check with:
-
-```bash
-python --version
-```
-
-### Bun (for job search tools)
-
-The Danish job portal CLIs are written in TypeScript and run with Bun:
-
-```bash
-curl -fsSL https://bun.sh/install | bash
-```
-
-### LaTeX (for compiling CVs and cover letters)
+### LaTeX (for compiling the Selbstauskunft and Anschreiben)
 
 Install a LaTeX distribution to compile the generated `.tex` files to PDF:
 
@@ -38,26 +22,9 @@ Install a LaTeX distribution to compile the generated `.tex` files to PDF:
 - **macOS:** [MacTeX](https://tug.org/mactex/)
 - **Linux:** `sudo apt install texlive-full` or `sudo dnf install texlive-scheme-full`
 
-The CV compiles with `lualatex` (pdflatex often fails on modern MiKTeX installs with `fontawesome5` font-expansion errors). The cover letter compiles with `xelatex` because `cover.cls` requires `fontspec` for its custom Lato/Raleway fonts.
+The Selbstauskunft compiles with `lualatex`. The Anschreiben compiles with `xelatex` because `cover.cls` requires `fontspec` for its custom Lato/Raleway fonts.
 
-## 2. Fork and clone
-
-```bash
-gh repo fork MadsLorentzen/ai-job-search --clone
-cd ai-job-search
-```
-
-Or manually: fork on GitHub, then clone your fork.
-
-## 3. Install job search CLI dependencies
-
-```bash
-for tool in jobbank-search jobdanmark-search jobindex-search jobnet-search; do
-  cd .agents/skills/$tool/cli && bun install && cd ../../../..
-done
-```
-
-## 4. Run the setup interview
+## 2. Run the setup interview
 
 Start Claude Code in the repository:
 
@@ -71,96 +38,96 @@ Then run the onboarding:
 /setup
 ```
 
-Claude will offer two paths:
+Claude will offer three paths:
 
-- **Path A (recommended):** Share your existing CV (mention the file with `@` or paste the text). Claude extracts your information and asks follow-up questions for anything missing.
-- **Path B:** Answer structured interview questions section by section.
+- **Path A (recommended if you have documents):** Point it at your `documents/` folder (income proof, employer letter, Schufa, landlord references).
+- **Path B:** Paste your income, employer, and household details directly in chat.
+- **Path C:** Answer structured interview questions section by section.
 
-Both paths produce the same result: fully populated profile files.
+All three paths produce the same result: fully populated profile files.
 
 ### What gets populated
 
 | File | Content |
 |------|---------|
-| `CLAUDE.md` | Your full candidate profile |
-| `01-candidate-profile.md` | Structured education, experience, skills |
-| `02-behavioral-profile.md` | Behavioral assessment |
-| `04-job-evaluation.md` | Personalized skill match areas and career goals |
-| `05-cv-templates.md` | Profile statement templates for your background |
-| `07-interview-prep.md` | STAR examples from your experience |
-| `cv/main_example.tex` | Your LaTeX CV with actual details |
-| `search-queries.md` | Job search queries for `/scrape` |
+| `CLAUDE.md` | Your full renter profile |
+| `01-renter-profile.md` | Structured identity, household, income, search profile |
+| `02-tenant-profile.md` | Tenant persona and selling points |
+| `04-flat-evaluation.md` | Your commute tolerance, filled into the scoring framework |
+| `selbstauskunft/selbstauskunft_example.tex` | Your LaTeX Mieterselbstauskunft with actual details |
+| `search-criteria.md` | Listing search criteria for `/scrape` |
+
+### What's already pre-filled
+
+This fork ships pre-configured for a specific search:
+- **Target areas:** Karlsruhe, Heidelberg, Mannheim, Bruchsal (and corridor towns: Walldorf, Wiesloch, Hockenheim, Schwetzingen, Sankt Leon-Rot)
+- **Budget:** 1.400 € Warmmiete (all-in)
+- **Workplace:** Sankt Leon-Rot
+- **Portal priority:** Kleinanzeigen + WG-Gesucht primary, Immowelt secondary, ImmoScout24 best-effort only
+
+`/setup` confirms these with you rather than re-deriving them from scratch. If you're repointing this fork at a different city, budget, or workplace, say so during setup and it'll update `CLAUDE.md` and `search-criteria.md` accordingly.
 
 ### Re-running setup
 
 You can update specific sections later:
 
 ```
-/setup --section skills
-/setup --section experience
 /setup --section search
 ```
 
-The `--section search` option is especially useful as your priorities evolve. It re-runs the search configuration interview and suggests role types you may not have considered based on your full profile.
+Useful as your budget, commute tolerance, or must-haves change.
 
-## 5. Optional: Set up salary benchmarking
+## 3. Test the workflow
 
-If you have salary data (from a union, salary survey, Glassdoor, or personal research):
-
-1. **Option A:** Create `salary_data.json` manually in the repo root (see `tools/README_SALARY_TOOL.md` for the format)
-2. **Option B:** Convert from Excel:
-   ```bash
-   pip install openpyxl
-   python tools/convert_salary_excel.py path/to/salary-data.xlsx --source "My Salary Data 2025"
-   ```
-
-This creates `salary_data.json` which the `/apply` workflow uses for salary benchmarking. If you skip this step, salary lookup is simply omitted.
-
-## 6. Test the workflow
-
-Find a job posting you're interested in, then:
+Find a listing you're interested in, then:
 
 ```
-/apply https://jobindex.dk/job/1234567
+/apply https://www.kleinanzeigen.de/s-anzeige/...
 ```
 
-Or paste the job description directly:
+Or paste the listing text directly:
 
 ```
-/apply [paste job posting text here]
+/apply [paste listing text here]
 ```
 
 Claude will:
-1. Evaluate the fit against your profile
+1. Evaluate the fit against your profile and check for scam red flags
 2. Ask if you want to proceed
-3. Draft a tailored CV and cover letter
-4. Have a reviewer agent critique the drafts
-5. Revise and present the final output
+3. Draft a Selbstauskunft and Anschreiben
+4. Have a reviewer agent check listing-detail accuracy and tone
+5. Revise and present the final PDFs
 
-## 7. Compile your documents
+**Nothing is sent automatically.** You review the PDFs and send the inquiry yourself, through whatever channel the listing specifies.
+
+## 4. Compile your documents
 
 After `/apply` creates the LaTeX files:
 
 ```bash
-# Compile CV
-cd cv && lualatex main_<company>.tex && cd ..
+# Compile Selbstauskunft
+cd selbstauskunft && lualatex selbstauskunft_<address-slug>.tex && cd ..
 
-# Compile cover letter
-cd cover_letters && xelatex cover_<company>_<role>.tex && cd ..
+# Compile Anschreiben
+cd anschreiben && xelatex anschreiben_<address-slug>.tex && cd ..
 ```
+
+## 5. Optional: recurring searches
+
+Listings in this price range near Heidelberg/Mannheim/Karlsruhe can disappear within hours. If you want `/scrape` to run on a timer rather than only on demand, use Claude Code's `/schedule` or `/loop` skills to re-invoke it periodically (e.g. every 30-60 minutes). This is opt-in and not configured by default — set it up explicitly if you want it.
 
 ## Troubleshooting
 
-### "salary_data.json not found"
-This is expected if you haven't set up salary benchmarking. The `/apply` workflow skips this step automatically.
-
-### Job search CLI tools not working
-Make sure Bun is installed and you ran `bun install` in each CLI directory. The tools require network access to fetch job listings.
+### Listing URL won't fetch (especially ImmoScout24)
+Expected for portals with strong anti-bot protection. Paste the listing text directly instead of the URL; the workflow does not attempt to bypass anti-bot measures.
 
 ### LaTeX compilation errors
-- CV: uses `lualatex` (pdflatex often fails on modern MiKTeX with `fontawesome5` font-expansion errors; lualatex handles the same sources cleanly)
-- Cover letter: uses `xelatex` (for custom fonts in `OpenFonts/fonts/`)
-- Make sure your LaTeX distribution includes the `moderncv` package
+- Selbstauskunft: uses `lualatex`
+- Anschreiben: uses `xelatex` (for custom fonts in `anschreiben/OpenFonts/fonts/`)
+- Make sure your LaTeX distribution includes `fontspec`, `babel`, and `enumitem`
 
-### Fonts not found in cover letter
-The cover letter template expects fonts in `cover_letters/OpenFonts/fonts/`. Make sure this directory exists and contains the Lato and Raleway font files.
+### Fonts not found in the Anschreiben
+The Anschreiben template expects fonts in `anschreiben/OpenFonts/fonts/`. Make sure this directory exists and contains the Lato and Raleway font files.
+
+### A listing looks like a scam
+Stop and check it against the red flags in `.claude/skills/flat-application-assistant/07-besichtigung-prep.md` before doing anything else - or just ask Claude "is this listing a scam?" and it will check directly.

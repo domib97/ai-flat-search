@@ -1,59 +1,50 @@
 <p align="center">
-  <img src="claude_animation.gif" alt="Claude Job Search Assistant" width="200">
+  <img src="claude_animation.gif" alt="Claude Flat Search Assistant" width="200">
 </p>
 
-# AI Job Search
+# AI Flat Search
 
-An AI-powered job application framework built on [Claude Code](https://claude.com/claude-code). Fork it, fill in your profile, and let Claude evaluate job postings, tailor your CV, write cover letters, and prepare you for interviews.
+An AI-powered flat-hunting framework built on [Claude Code](https://claude.com/claude-code), forked from [Mads Lorentzen's ai-job-search](https://github.com/MadsLorentzen/ai-job-search) and repurposed for apartment hunting in Germany. Fill in your profile, and let Claude evaluate listings, keep your Mieterselbstauskunft current, draft Anschreiben to landlords, and prep you for viewings.
 
 ## What this is
 
-A structured workflow that turns Claude Code into a full-stack job application assistant. The core workflow (self-profiling, fit evaluation, and the drafter-reviewer application pipeline) is **language- and country-agnostic**. The job portal search skills are built for the Danish market (Jobindex, Jobnet, Akademikernes Jobbank, etc.), but the pattern is designed to be swapped for your local job boards.
+The job-search and flat-search problems turn out to be nearly the same shape: a structured profile, fast-moving listings that need triage, and a tailored message that has to reference specifics instead of reading as a template. This fork keeps the original three-command workflow (`/setup` → `/scrape` → `/apply`) and re-skins every document and evaluation step for renting instead of hiring.
 
 ```
-/setup          /scrape              /apply <url>
-  |                |                     |
-  v                v                     v
-Fill in        Search job           Evaluate fit
-your profile   portals              Score & recommend
-  |                |                     |
-  v                v                     v
-Profile        Present matches      Draft CV + Cover Letter
-files ready    with fit ratings     (LaTeX, tailored)
-                   |                     |
-                   v                     v
-               Pick a match         Reviewer agent critiques
-               -> /apply            -> Revise -> Final output
+/setup          /scrape              /apply
+  |                |                   |
+  v                v                   v
+Fill in        Search Kleinanzeigen  Evaluate fit
+your profile   + WG-Gesucht etc.     Score commute/price/area
+  |                |                   |
+  v                v                   v
+Profile        Present matches      Draft Selbstauskunft
+files ready    with fit ratings     + Anschreiben (LaTeX)
+                   |                   |
+                   v                   v
+               Pick a match         Reviewer agent checks
+               -> /apply            for scams + generic phrasing
+                                     -> Revise -> Final output
+                                     (you send it yourself)
 ```
 
-The framework encodes career guidance best practices, including structured evaluation criteria, forward-looking cover letter framing, and optional salary benchmarking.
+This instance is configured for a specific search: **Karlsruhe, Heidelberg, Mannheim, Bruchsal** (and well-connected towns in between), **max. 1.400 € Warmmiete**, commuting to a new job in **Sankt Leon-Rot**. Change `CLAUDE.md` and `.claude/skills/flat-scraper/search-criteria.md` to point this at a different city, budget, or workplace.
+
+## What makes this different from a generic listing alert
+
+- **It drafts, it never sends.** No portal login, no auto-submitted inquiry forms, no messaging API. `/apply` produces a PDF Selbstauskunft and Anschreiben for you to review and send yourself.
+- **No anti-bot evasion.** ImmoScout24 has aggressive Cloudflare protection; this framework does not try to defeat it. It uses `WebSearch`/`WebFetch` only, the same as you fetching a page in a browser tab — fetches there will sometimes just fail, and that's the expected outcome rather than something to route around.
+- **Every Anschreiben must reference a real detail from the listing.** The biggest failure mode in rental inquiries is a generic copy-paste message buried in 100+ identical ones. The writing-style rules (`03-writing-style.md`) make a specific listing detail mandatory, not optional.
+- **Scam awareness is built in.** `07-besichtigung-prep.md` lists the common rental-scam patterns (pay-before-viewing, "landlord is abroad," below-market pricing), and both `/scrape` and `/apply` check for them before doing anything else with a listing.
 
 ## Prerequisites
 
 - [Claude Code](https://claude.com/claude-code) (CLI)
-- Python 3.10+
-- [Bun](https://bun.sh) (for Danish job search CLI tools)
-- LaTeX distribution with `lualatex` and `xelatex`: [TeX Live](https://tug.org/texlive/) or [MiKTeX](https://miktex.org/). The CV compiles with `lualatex` (pdflatex often fails on modern MiKTeX installs with `fontawesome5` font-expansion errors); the cover letter compiles with `xelatex` because `cover.cls` requires `fontspec`.
+- LaTeX distribution with `lualatex` and `xelatex`: [TeX Live](https://tug.org/texlive/) or [MiKTeX](https://miktex.org/). The Selbstauskunft compiles with `lualatex`; the Anschreiben compiles with `xelatex` because `cover.cls` requires `fontspec` for its custom Lato/Raleway fonts.
 
 ## Quick start
 
-### 1. Fork and clone
-
-```bash
-gh repo fork MadsLorentzen/ai-job-search --clone
-cd ai-job-search
-```
-
-### 2. Install job search tools
-
-```bash
-cd .agents/skills/jobbank-search/cli && bun install && cd ../../../..
-cd .agents/skills/jobdanmark-search/cli && bun install && cd ../../../..
-cd .agents/skills/jobindex-search/cli && bun install && cd ../../../..
-cd .agents/skills/jobnet-search/cli && bun install && cd ../../../..
-```
-
-### 3. Set up your profile
+### 1. Set up your profile
 
 ```bash
 claude
@@ -61,183 +52,152 @@ claude
 /setup
 ```
 
-`/setup` offers three paths: read your `documents/` folder if you have one populated (CV PDF, LinkedIn export, diplomas, reference letters, past applications), import a single CV pasted in chat, or walk through an interview. It auto-detects what you have and asks. Documents-folder mode is idempotent and safe to re-run as you add more material; see `documents/README.md` for the layout.
+`/setup` offers three paths: read your `documents/` folder if you have it populated (income proof, employer letter, Schufa, landlord references, past inquiries), paste your details directly in chat, or walk through an interview. The search criteria (target areas, budget, workplace) are already pre-filled from this fork's configuration — setup mainly fills in your personal facts and confirms the commute tolerance.
 
-### 4. Search for jobs
+### 2. Search for listings
 
 ```bash
 /scrape
 ```
 
-This searches multiple job portals for positions matching your profile, deduplicates results, and presents them sorted by fit. Pick a match to run `/apply` on it directly.
+This searches Kleinanzeigen and WG-Gesucht (primary), Immowelt (secondary), and ImmoScout24 (best-effort), deduplicates results, and presents them sorted by fit. Pick a match to run `/apply` on it directly.
 
-### 5. Apply to a job
-
-```bash
-/apply https://jobindex.dk/job/1234567
-```
-
-If the URL can't be fetched (some job portals block automated access), you can paste the job description directly instead:
+### 3. Inquire about a listing
 
 ```bash
-/apply <paste the full job description here>
+/apply https://www.kleinanzeigen.de/s-anzeige/...
 ```
 
-This runs the full workflow: evaluate fit, draft CV + cover letter, review with a second agent, revise, and present the final output.
+If the URL can't be fetched (ImmoScout24 in particular often blocks automated access), paste the listing text directly instead:
+
+```bash
+/apply <paste the full listing text here>
+```
+
+This runs the full workflow: evaluate fit, check for scam red flags, draft a Mieterselbstauskunft + Anschreiben, review with a second agent, revise, and present the final PDFs. **You send the inquiry yourself** — nothing is submitted automatically.
 
 ## Other commands
 
-`/setup`, `/scrape`, and `/apply` form the core workflow. Two more commands extend it once your profile is in place:
-
-- **`/expand`** enriches your profile by scanning public sources you've already linked in it (GitHub repos, portfolio site, Kaggle, Google Scholar) and looking up syllabi for named courses and certifications. Discovered competencies are added to your profile with a source tag. Useful right after `/setup` to surface skills that documents alone don't make explicit.
-- **`/upskill`** analyzes the gap between your profile and your tracked job postings (or a single posting via `/upskill <URL>`). Produces a prioritized heatmap of skill gaps and a learning plan with web-searched study resources and time estimates. Useful for career planning between applications.
-
-`/reset` is also available, see [Starting over](#starting-over) below.
+`/reset` wipes profile data or the documents folder, see [Starting over](#starting-over) below.
 
 ## File structure
 
 ```
-ai-job-search/
-├── CLAUDE.md                          # Main candidate profile + workflow rules
+ai-flat-search/
+├── CLAUDE.md                              # Renter profile + workflow rules
 ├── .claude/
 │   ├── commands/
-│   │   ├── apply.md                   # /apply workflow (drafter-reviewer)
-│   │   ├── setup.md                   # /setup onboarding (documents folder, CV import, or interview)
-│   │   ├── expand.md                  # /expand competency enrichment from documents and online presence
-│   │   └── reset.md                   # /reset wipe profile data or documents folder
+│   │   ├── apply.md                       # /apply workflow (drafter-reviewer)
+│   │   ├── setup.md                       # /setup onboarding
+│   │   └── reset.md                       # /reset wipe profile data or documents folder
 │   ├── skills/
-│   │   ├── job-application-assistant/  # Core application skill
-│   │   │   ├── SKILL.md               # Skill definition
-│   │   │   ├── 01-candidate-profile.md # Your education, experience, skills
-│   │   │   ├── 02-behavioral-profile.md# PI/DISC/personality assessment
-│   │   │   ├── 03-writing-style.md    # Tone, structure, do's and don'ts
-│   │   │   ├── 04-job-evaluation.md   # Scoring framework for job fit
-│   │   │   ├── 05-cv-templates.md     # LaTeX CV structure + tailoring rules
-│   │   │   ├── 06-cover-letter-templates.md # LaTeX cover letter templates
-│   │   │   └── 07-interview-prep.md   # STAR examples + interview framework
-│   │   ├── job-scraper/               # Job search orchestration
-│   │   └── upskill/                   # /upskill skill gap analysis and learning plan
-│   └── settings.local.json            # Claude Code permissions
-├── .agents/skills/                    # Job portal CLI tools (Denmark)
-│   ├── jobbank-search/                # Akademikernes Jobbank
-│   ├── jobdanmark-search/             # Jobdanmark.dk
-│   ├── jobindex-search/               # Jobindex.dk
-│   └── jobnet-search/                 # Jobnet.dk (government portal)
-├── cv/
-│   └── main_example.tex               # moderncv LaTeX template
-├── cover_letters/
-│   ├── cover.cls                      # Custom cover letter LaTeX class
-│   └── OpenFonts/                     # Lato + Raleway fonts
-├── documents/                         # Career source materials for /setup Path A and /expand
-│   ├── README.md                      # Folder layout instructions
-│   ├── cv/                            # Master CV (PDF or .tex)
-│   ├── linkedin/                      # LinkedIn profile export (PDF)
-│   ├── diplomas/                      # Degree certificates and transcripts
-│   ├── references/                    # Reference letters
-│   └── applications/                  # Past application records (<company>_<role>/)
-├── salary_lookup.py                   # Salary benchmarking tool (BYO data)
-├── tools/
-│   ├── convert_salary_excel.py        # Convert salary Excel to JSON
-│   └── README_SALARY_TOOL.md          # Salary tool setup instructions
-├── job_scraper/                       # Scraper state (seen jobs, results)
-├── upskill/                           # /upskill report output (markdown reports per run)
-├── job_search_tracker.csv             # Application tracking spreadsheet
-└── SETUP.md                           # Detailed setup guide
+│   │   ├── flat-application-assistant/    # Core inquiry skill
+│   │   │   ├── SKILL.md                   # Skill definition
+│   │   │   ├── 01-renter-profile.md       # Identity, household, employment, income
+│   │   │   ├── 02-tenant-profile.md       # Tenant persona, selling points
+│   │   │   ├── 03-writing-style.md        # Tone, structure, do's and don'ts for Anschreiben
+│   │   │   ├── 04-flat-evaluation.md      # Scoring framework for listing fit
+│   │   │   ├── 05-selbstauskunft-templates.md  # LaTeX Selbstauskunft structure
+│   │   │   ├── 06-anschreiben-templates.md     # LaTeX Anschreiben structure
+│   │   │   └── 07-besichtigung-prep.md    # Viewing prep, questions, scam red flags
+│   │   └── flat-scraper/                  # Listing search orchestration
+│   └── settings.local.json                # Claude Code permissions
+├── selbstauskunft/
+│   └── selbstauskunft_example.tex         # Mieterselbstauskunft LaTeX template
+├── anschreiben/
+│   ├── cover.cls                          # Custom letter LaTeX class
+│   └── OpenFonts/                         # Lato + Raleway fonts
+├── documents/                              # Source materials for /setup
+│   ├── README.md                          # Folder layout instructions
+│   ├── income/                            # Payslips / proof of income
+│   ├── employer/                          # New job contract / offer letter
+│   ├── credit/                            # Schufa-Bonitätsauskunft
+│   ├── landlord_refs/                     # Previous landlord references
+│   └── inquiries/                         # Past flat inquiries (<address-slug>/)
+├── flat_scraper/                          # Scraper state (seen listings)
+├── flat_search_tracker.csv                # Inquiry tracking spreadsheet
+└── SETUP.md                               # Detailed setup guide
 ```
 
 ## How `/apply` works
 
 The `/apply` command runs a **drafter-reviewer workflow** with mandatory PDF compilation:
 
-1. **Parse** the job posting (URL or text)
-2. **Evaluate fit** against your profile (skills, experience, culture, location, career alignment)
-3. **Draft** a tailored CV and cover letter in LaTeX
-4. **Spawn a reviewer agent** that researches the company and critiques the drafts
+1. **Parse** the listing (URL or text)
+2. **Evaluate fit** against your profile (price, commute to Sankt Leon-Rot, area, size, deal-breakers) and check for scam red flags
+3. **Draft** a Selbstauskunft (mostly static, reused across listings) and a tailored Anschreiben in LaTeX
+4. **Spawn a reviewer agent** that checks listing-detail claims, scam risk, and generic phrasing
 5. **Revise** based on the reviewer's feedback
-6. **Compile and inspect** both PDFs: lualatex for the CV, xelatex for the cover letter. Claude reads the rendered pages and iterates on the LaTeX until the CV is exactly 2 pages with no orphaned entry titles, and the cover letter is exactly 1 page with the signature visible and fonts consistent.
-7. **Present** the final output with a verification checklist
-
-All claims in the CV and cover letter are verified against your actual profile. The system never fabricates skills or experience.
-
-### What makes this workflow different
-
-- **PDF verification loop.** Most LaTeX-resume templates produce "looks fine in the .tex" output that breaks in the PDF: job titles orphan to the next page, cover letters spill onto page 2, bullet fonts silently fall back to the body font. The `/apply` command compiles and visually inspects every PDF and applies targeted fixes (`\needspace`, `\enlargethispage`, font-matching wrappers for list items) until the layout is clean. This runs automatically on every application.
-- **Relevance-weighted CV cutting.** When a CV overflows 2 pages, the workflow does not cut mechanically from the "oldest" section. It scores each candidate line by (a) relevance to the target posting, (b) uniqueness in the document, and (c) whether the cover letter depends on it, and cuts the lowest-total-score line first. An older-role bullet that hits posting keywords survives ahead of a recent-role bullet that does not.
-- **Drafter-reviewer separation.** The drafter writes; a second Claude agent, spawned with a fresh context, researches the company and critiques the drafts. The drafter then revises. This catches missed keywords, weak framing, and generic language that a single pass often leaves in.
-- **Token-efficient reviewer dispatch.** The reviewer agent receives drafts inline rather than re-reading them, and the verification checklist runs once at the end of the workflow rather than being duplicated by both agents. Note: the new compile-and-inspect step in Step 5 spends some of those savings on PDF rendering and layout iteration — the workflow trades some end-to-end token cost for a real reduction in broken PDFs reaching the user.
+6. **Compile and inspect** both PDFs: lualatex for the Selbstauskunft, xelatex for the Anschreiben
+7. **Present** the final output with a verification checklist — you send it yourself
 
 ## Customization
 
 ### Which files to edit manually
 
-If you prefer editing files directly instead of using `/setup`:
-
 | File | What to change |
 |------|---------------|
-| `CLAUDE.md` | Your full profile (name, education, experience, skills, goals) |
-| `01-candidate-profile.md` | Structured version of your CV data |
-| `02-behavioral-profile.md` | Your behavioral assessment or self-assessment |
-| `04-job-evaluation.md` | Skill match areas, career goals, motivation filters |
-| `05-cv-templates.md` | Profile statement templates for different role types |
-| `07-interview-prep.md` | Your STAR examples from actual experience |
-| `search-queries.md` | Job search queries for your skills and location |
+| `CLAUDE.md` | Your full renter profile and search criteria |
+| `01-renter-profile.md` | Structured identity, household, income, search profile |
+| `04-flat-evaluation.md` | Commute tolerance, scoring weights |
+| `06-anschreiben-templates.md` | Anschreiben structure/tone |
+| `search-criteria.md` | Target areas, budget, portal priority for `/scrape` |
 
-### Updating your search queries
-
-As your priorities evolve, you can reconfigure just the job search without re-running the full profile setup:
+### Updating your search criteria
 
 ```
 /setup --section search
 ```
 
-This re-runs the search configuration interview: which roles to target, which skills to search for, which locations, and which portals. It also suggests role types you may not have considered based on your profile.
+Re-runs the search configuration interview without redoing the full profile.
+
+### Changing the target city/budget/workplace
+
+This fork is configured for Karlsruhe/Heidelberg/Mannheim/Bruchsal, 1.400 € Warmmiete, and a commute to Sankt Leon-Rot. To repoint it elsewhere, edit the "Search Profile" section in `CLAUDE.md` and the location/budget sections in `.claude/skills/flat-scraper/search-criteria.md` and `.claude/skills/flat-application-assistant/04-flat-evaluation.md`.
 
 ### LaTeX templates
 
-The CV uses [moderncv](https://ctan.org/pkg/moderncv) (banking style). The cover letter uses a custom `cover.cls` with Lato/Raleway fonts. You can replace these with your own templates; just update the guidance in `05-cv-templates.md` and `06-cover-letter-templates.md`.
+The Selbstauskunft uses a plain `article`-based template (see `05-selbstauskunft-templates.md`). The Anschreiben uses the same custom `cover.cls` as the original job-search fork, with Lato/Raleway fonts. Replace either with your own templates by updating the corresponding guidance file.
 
-### Job search tools
+### Adding more portals
 
-The four CLI tools in `.agents/skills/` are specific to the **Danish job market** (Jobbank, Jobdanmark, Jobindex, Jobnet). They demonstrate the pattern for building job portal integrations. If you're in a different country, you can build equivalent tools for your local job portals using the same structure.
-
-### Salary benchmarking
-
-The salary tool works with any salary data you provide (union statistics, Glassdoor exports, personal research, etc.). See `tools/README_SALARY_TOOL.md` for the expected format and setup. If you don't have salary data, the salary step is simply skipped.
+`flat-scraper`'s `search-criteria.md` currently prioritizes Kleinanzeigen and WG-Gesucht (weak/moderate anti-bot protection), with Immowelt as secondary and ImmoScout24 best-effort only. If you want to add another portal, add it to the query categories there — but keep using `WebSearch`/`WebFetch` only; do not add scraping logic that tries to bypass a portal's bot protection.
 
 ### Starting over
 
-To wipe your profile data and start fresh:
-
 ```
-/reset profile    # clears skill files, preserves framework rules
+/reset profile    # clears renter profile, preserves framework rules
 /reset documents  # deletes files from documents/ folder
 /reset all        # both
 ```
 
 `/reset` shows exactly what will be deleted and requires you to type `RESET` to confirm. Nothing is deleted until you do.
 
+## What was removed from the original job-search fork
+
+A few pieces of the original `ai-job-search` framework didn't have a clean rental equivalent and were removed rather than forced into an awkward analogy:
+
+- **Salary benchmarking tool** (`salary_lookup.py`, `tools/`) — no equivalent BYO dataset workflow for rent benchmarking exists yet; use a Mietspiegel lookup ad hoc via WebSearch during evaluation if needed.
+- **`/expand` and `/upskill`** — competency-gap analysis and online-presence enrichment don't map onto a renter profile, which is mostly static facts (income, employment, household) rather than an evolving skill set.
+- **The four Danish job-portal CLI tools** (`.agents/skills/`) — those were bespoke API-scraping tools for Jobindex/Jobnet/etc. Rather than building equivalent bespoke scrapers for German rental portals (which would mean reverse-engineering APIs behind anti-bot protection), `flat-scraper` uses `WebSearch`/`WebFetch` directly, the same as the original framework's fallback for non-Danish sites.
+
 ## Tips for better results
 
-### Profile depth matters
+### Speed matters more than for job applications
 
-The single biggest factor in output quality is how much detail you put into your profile. A thin profile produces generic applications; a detailed one enables genuinely tailored results.
+Job postings stay open for weeks; good, affordable flats in this price range near Heidelberg/Mannheim/Karlsruhe can disappear within hours of being posted. Run `/scrape` often, and don't over-polish an Anschreiben for a fresh, high-fit listing — a fast, correct inquiry beats a slow, perfect one.
 
-- **Role descriptions:** Don't just list job titles. Describe what you actually did in each position: specific projects, tools used, responsibilities, and measurable achievements. The more material you provide, the more precisely the system can reframe your experience for different roles.
-- **Skills in context:** Instead of listing "Python" or "project management," describe how and where you applied them. "Built ML pipelines for customer churn prediction in Python using scikit-learn" gives the system far more to work with than "Python, machine learning."
-- **All onboarding paths work:** Whether you point `/setup` at your `documents/` folder, paste a single CV, or walk through the interview, the principle is the same: richer input produces sharper output.
+### Profile depth still matters, just differently
 
-### Career path discovery
+A job CV benefits from rich narrative detail. A renter profile benefits from **consistency**: the same income figure, employment dates, and household facts must appear identically across every Selbstauskunft and Anschreiben you send. Keep `01-renter-profile.md` as the single source of truth and never let a draft drift from it.
 
-The framework supports two distinct modes of job searching:
+### Recurring searches
 
-- **Explicit targeting:** You know which roles or sectors you want. The system helps refine and prioritize based on fit.
-- **Latent opportunity discovery:** By analyzing your full history (not just job titles, but the actual work you did), the system can surface career paths you haven't considered. Transferable skills that map to unexpected industries, patterns in what you enjoyed or excelled at, or emerging roles that combine your domain expertise with new technology.
-
-To get the most from this, invest time during `/setup` in describing not just your experience, but what energized you, what drained you, and what you'd want more of. This context directly shapes how the system evaluates fit and which roles it surfaces during `/scrape`.
+Because listings move fast, consider using Claude Code's `/schedule` or `/loop` skills to re-run `/scrape` on a timer (e.g. every 30-60 minutes) rather than only checking manually. This only repeats the same search-and-report behavior on a schedule — it does not add any auto-send capability.
 
 ## Acknowledgements
 
-- [Mikkel Krogholm](https://github.com/mikkelkrogsholm) ([skills repo](https://github.com/mikkelkrogsholm/skills)) for the job search CLI skills
+- Forked from [Mads Lorentzen's ai-job-search](https://github.com/MadsLorentzen/ai-job-search)
 - Built with [Claude Code](https://claude.com/claude-code) by [Anthropic](https://anthropic.com)
 
 ## License

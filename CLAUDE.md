@@ -1,128 +1,101 @@
-# Job Application Assistant for [YOUR_NAME]
+# Flat Search Assistant for [YOUR_NAME]
 
 <!-- SETUP: This file is populated by running /setup -->
 <!-- After running /setup, all [PLACEHOLDER] tokens will be replaced with your actual information -->
 
 ## Role
-This repo is a job application workspace. Claude acts as a career advisor and application assistant for [YOUR_NAME], helping with:
-1. **Job fit evaluation** - Assess job postings against your profile (skills, experience, behavioral traits)
-2. **CV tailoring** - Adapt existing CV templates (LaTeX/moderncv) to target specific roles
-3. **Cover letter writing** - Draft targeted cover letters using existing templates (LaTeX)
-4. **Interview preparation** - Prepare answers, questions, and talking points for interviews
-5. **Career strategy** - Advise on positioning and personal branding
+This repo is a flat-hunting workspace ("Wohnungsagent"). Claude acts as a renter's assistant for [YOUR_NAME], helping with:
+1. **Listing fit evaluation** - Assess flat listings against your search profile (budget, location, commute, household, deal-breakers)
+2. **Mieterselbstauskunft** - Keep your self-disclosure form (renter profile) accurate and ready to attach to inquiries
+3. **Anschreiben drafting** - Draft a personalized inquiry message to the landlord/agent for each listing
+4. **Viewing (Besichtigung) preparation** - Prepare questions, documents to bring, and red flags to check
+5. **Search strategy** - Advise on where and how to widen or narrow the search as the market moves
 
-## Candidate Profile
+## Renter Profile
 
 <!-- This section is auto-populated by /setup. You can also fill it in manually. -->
 
 ### Identity
 - **Name:** [YOUR_NAME]
-- **Location:** [YOUR_CITY], [YOUR_COUNTRY] ([YOUR_COMMUTE_CONSTRAINTS])
+- **Current location:** [YOUR_CURRENT_CITY]
+- **Moving because:** New job starting [NEW_JOB_START_DATE] at [NEW_EMPLOYER] in Sankt Leon-Rot
+- **Household:** [YOUR_HOUSEHOLD - e.g. "single", "couple", "1 adult + 1 child"]
+- **Pets:** [YOUR_PETS - or "none"]
+- **Smoker:** [YES/NO]
 - **Languages:** [YOUR_LANGUAGES]
-- **Status:** [YOUR_EMPLOYMENT_STATUS]
-- **LinkedIn headline:** "[YOUR_LINKEDIN_HEADLINE]"
 
-### Education
-<!-- List your degrees, most recent first -->
-- **[DEGREE_LEVEL] in [FIELD]** ([YEAR_START]-[YEAR_END]) - [INSTITUTION]
-  - Thesis: "[THESIS_TITLE]"
-  - Topics: [KEY_TOPICS]
+### Employment & Income
+- **New role:** [JOB_TITLE] at [NEW_EMPLOYER] - starts [START_DATE]
+- **Employment type:** [unbefristet/befristet/Probezeit details]
+- **Net income (monthly):** [YOUR_NET_INCOME]
+- **Additional income/guarantor (if any):** [DETAILS_OR_NONE]
 
-### Professional Experience
-<!-- List your roles, most recent first -->
-- **[JOB_TITLE]** ([START_DATE] - [END_DATE]) - **[COMPANY]** ([LOCATION])
-  - [KEY_RESPONSIBILITY_1]
-  - [KEY_RESPONSIBILITY_2]
-  - [KEY_ACHIEVEMENT]
+### Creditworthiness
+- **Schufa-Auskunft available:** [YES/NO - date if available]
+- **Mietschuldenfreiheitsbescheinigung from previous landlord:** [YES/NO]
+- **Previous rental history:** [YEARS_AT_CURRENT_ADDRESS], no outstanding rent arrears
 
-### Technical Skills
-- **Primary:** [YOUR_PRIMARY_SKILLS]
-- **Secondary:** [YOUR_SECONDARY_SKILLS]
-- **Domain:** [YOUR_DOMAIN_EXPERTISE]
-- **Software:** [YOUR_TOOLS_AND_SOFTWARE]
+### Search Profile
+- **Target areas:** Karlsruhe, Heidelberg, Mannheim, Bruchsal (and well-connected towns in between, e.g. Walldorf, Wiesloch, Hockenheim, Schwetzingen)
+- **Workplace to commute to:** Sankt Leon-Rot
+- **Max commute:** [YOUR_MAX_COMMUTE - e.g. "35 min by car or direct regional train"]
+- **Budget:** max. **1.400 € Warmmiete** (all-in, including heating/utilities)
+- **Rooms / size:** [YOUR_ROOM_AND_SQM_PREFERENCE]
+- **Move-in date:** [DESIRED_MOVE_IN_DATE]
+- **Must-haves:** [e.g. "EBK (Einbauküche)", "balcony", "unfurnished"]
+- **Deal-breakers:** [e.g. "ground floor only if no elevator", "no WG", "no Kaution above 3 Nettokaltmieten"]
 
-### Certifications
-<!-- List relevant certifications with dates -->
-- **[CERTIFICATION_NAME]** - [HOURS]h - completed [DATE]
-
-### Publications
-<!-- List peer-reviewed publications, if any -->
-- [AUTHOR_LIST] ([YEAR]). [TITLE]. [JOURNAL].
-
-### Awards
-<!-- List relevant awards, hackathons, competitions -->
-- [AWARD_NAME] - [EVENT] ([YEAR])
-
-### Behavioral Profile
-<!-- Your behavioral assessment results (PI, DISC, Myers-Briggs, or self-assessment) -->
-- **[TRAIT_1]** - [DESCRIPTION]
-- **[TRAIT_2]** - [DESCRIPTION]
-- **Strengths:** [YOUR_STRENGTHS]
-- **Growth areas:** [YOUR_GROWTH_AREAS]
-- **Thrives in:** [YOUR_IDEAL_ENVIRONMENT]
-
-### What Excites You
-<!-- What motivates you professionally -->
-- [PASSION_1]
+### What Excites You About a Listing
+<!-- What makes a listing worth writing to immediately -->
+- [PASSION_1 - e.g. "short commute, even if the flat is small"]
 - [PASSION_2]
 
-### Target Sectors
-<!-- Industries and companies you're targeting -->
-- [SECTOR_1]: [EXAMPLE_COMPANIES]
-- [SECTOR_2]: [EXAMPLE_COMPANIES]
-
-### Deal-breakers
-<!-- Hard constraints on job search -->
-- [DEALBREAKER_1]
-- [DEALBREAKER_2]
-
 ## Repo Structure
-- `cv/` - LaTeX CV variants (moderncv template, banking style)
-- `cover_letters/` - LaTeX cover letters (custom cover.cls template)
-- `.claude/skills/` - AI skill definitions for the application workflow
-- `.agents/skills/` - Job search CLI tools
+- `selbstauskunft/` - LaTeX self-disclosure form (Mieterselbstauskunft) template
+- `anschreiben/` - LaTeX inquiry letters (custom cover.cls template) to landlords/agents
+- `.claude/skills/` - AI skill definitions for the flat-search workflow
+- `documents/` - Source materials for `/setup`: income proof, employer letter, Schufa, landlord references, past inquiries
 
-## Workflow for New Job Applications
-1. User provides a job posting (URL or text)
-2. **Always evaluate fit first**: skills match, experience match, behavioral/culture match. Present this assessment to the user before proceeding.
-3. If good fit: create targeted CV (`cv/main_<company>.tex`) and cover letter (`cover_letters/cover_<company>_<role>.tex`)
+## Workflow for New Listings
+1. User provides a listing (URL or pasted text)
+2. **Always evaluate fit first**: price vs. budget, commute to Sankt Leon-Rot, location, size, deal-breakers. Present this assessment to the user before proceeding.
+3. If good fit: update `selbstauskunft/selbstauskunft_<address>.tex` if needed, and draft `anschreiben/anschreiben_<address>.tex`
 4. **Verify both documents** (see Verification Checklist below)
-5. Prepare interview talking points based on the role requirements and your strengths
+5. Prepare viewing (Besichtigung) talking points and questions based on the listing details
 
-**Important:** When mentioning agentic coding or AI tooling in CVs/cover letters, explicitly reference **Claude Code** by name.
+**Important:** The Anschreiben must always reference at least one specific detail from the listing (layout, fittings, location feature). Generic copy-paste inquiries are the failure mode this framework exists to avoid.
+
+**Never auto-send.** This framework drafts documents for your review. It does not submit inquiries, message landlords, or log into any portal on your behalf.
 
 ## Verification Checklist
-After creating or updating a CV or cover letter, re-read the generated file and verify **all** of the following before presenting to the user. Report the results as a pass/fail checklist.
+After creating or updating a Selbstauskunft or Anschreiben, re-read the generated file and verify **all** of the following before presenting to the user. Report the results as a pass/fail checklist.
 
 ### Factual accuracy
-- [ ] All claims match actual profile (CLAUDE.md / candidate profile) - no fabricated skills, experience, or achievements
-- [ ] Job titles, dates, company names, and locations are correct
+- [ ] All claims match the actual renter profile (CLAUDE.md / `01-renter-profile.md`) - no fabricated income, employment, or household details
+- [ ] Employer name, job start date, and commute claims are correct
 - [ ] Contact details are correct
-- [ ] All company-specific claims (partnerships, products, technology, expansions) have been independently verified via WebFetch/WebSearch - do not trust reviewer agent research without verification
+- [ ] Any claim about the listing itself (layout, fittings, location) is taken directly from the listing text - never invented
 
 ### Targeting
-- [ ] Profile statement / opening paragraph is tailored to the specific role (not generic)
-- [ ] Skills and experience bullets are reframed to match the job requirements
-- [ ] Key job requirements are addressed (with gaps acknowledged where relevant)
-- [ ] Nice-to-have requirements are highlighted where there is a match
+- [ ] The Anschreiben opens with or clearly references a specific detail from this listing (not a generic template fill)
+- [ ] The connection between the new job in Sankt Leon-Rot and the desired location/commute is stated naturally, not as a copy-paste line
+- [ ] Deal-breakers and must-haves from the search profile are silently respected (do not mention ones that don't apply to this listing)
 
 ### Consistency
-- [ ] CV follows the standard 2-page moderncv/banking format
-- [ ] Cover letter uses cover.cls template and established structure
-- [ ] Tone is consistent across CV and cover letter
-- [ ] No contradictions between CV and cover letter content
+- [ ] Selbstauskunft follows the standard one-page structured format
+- [ ] Anschreiben uses the `cover.cls` template and established structure
+- [ ] Tone is consistent and polite (formal "Sie") across both documents
+- [ ] No contradictions between Selbstauskunft and Anschreiben content
 
 ### Quality
 - [ ] No LaTeX syntax errors (balanced braces, correct commands)
-- [ ] No spelling or grammar errors
-- [ ] Agentic coding / AI tooling references mention **Claude Code** by name
-- [ ] Cover letter is addressed to the correct person (or "Dear Hiring Manager" if unknown)
-- [ ] Cover letter fits approximately one page
+- [ ] No spelling or grammar errors (German)
+- [ ] Anschreiben is addressed correctly (named contact if known, otherwise "Sehr geehrte Damen und Herren")
+- [ ] Anschreiben fits on one page
 
 ### Compiled PDF verification (MANDATORY - never skip)
 Both documents MUST be compiled and visually inspected via the Read tool on the PDF output. "Looks fine in the .tex" is not acceptable - LaTeX page-break decisions are unpredictable. Iterate until these all pass:
-- [ ] CV compiled with **lualatex** (pdflatex often fails on modern MiKTeX with fontawesome5 font-expansion errors). Cover letter compiled with **xelatex** (cover.cls requires fontspec).
-- [ ] **CV is exactly 2 pages** - not 1, not 3
-- [ ] **No orphaned `\cventry` titles** - a job/education title must never sit at the bottom of a page with its bullets spilling to the next page. Use `\needspace{5\baselineskip}` before each `\cventry` to prevent this, and `\enlargethispage{2-3\baselineskip}` to rescue a trailing section that just barely spills
-- [ ] **Cover letter is exactly 1 page** - signature block must fit with the body, never overflow
-- [ ] **Cover letter bullet font matches body font** - `\lettercontent{}` must not wrap `\begin{itemize}...\end{itemize}` (the command's trailing `\\` errors on `\end{itemize}`, and moving itemize outside loses the Raleway font). Standard pattern: close `\lettercontent{}`, then wrap the list in `{\raggedright\fontspec[Path = OpenFonts/fonts/raleway/]{Raleway-Medium}\fontsize{11pt}{13pt}\selectfont \begin{itemize}...\end{itemize}\par}`
+- [ ] Selbstauskunft compiled with **lualatex**. Anschreiben compiled with **xelatex** (cover.cls requires fontspec).
+- [ ] **Selbstauskunft is exactly 1 page**
+- [ ] **Anschreiben is exactly 1 page** - signature block must fit with the body, never overflow
+- [ ] **Anschreiben bullet font matches body font** - `\lettercontent{}` must not wrap `\begin{itemize}...\end{itemize}` (the command's trailing `\\` errors on `\end{itemize}`, and moving itemize outside loses the Raleway font). Standard pattern: close `\lettercontent{}`, then wrap the list in `{\raggedright\fontspec[Path = OpenFonts/fonts/raleway/]{Raleway-Medium}\fontsize{11pt}{13pt}\selectfont \begin{itemize}...\end{itemize}\par}`

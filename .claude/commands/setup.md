@@ -1,8 +1,10 @@
-# /setup - Profile Onboarding
+# /setup - Renter Profile Onboarding
 
-You are running the onboarding setup for the AI Job Search framework. Your goal is to collect the user's professional information and populate all profile files so the `/apply` workflow works out of the box.
+You are running the onboarding setup for the AI Flat Search framework. Your goal is to collect the user's renter information and populate all profile files so the `/scrape` and `/apply` workflows work out of the box.
 
 There are three paths into setup. Step 0 picks the right one; all three converge on Step 3 (file generation) and Step 4 (confirmation).
+
+The search criteria (target areas: Karlsruhe, Heidelberg, Mannheim, Bruchsal; budget: 1.400 € Warmmiete; workplace: Sankt Leon-Rot; primary portals: Kleinanzeigen, WG-Gesucht) are already baked into `CLAUDE.md` and `search-criteria.md` as defaults. Setup only needs to confirm or adjust them, plus collect the personal/financial details that can't be guessed.
 
 ---
 
@@ -10,21 +12,21 @@ There are three paths into setup. Step 0 picks the right one; all three converge
 
 If `$ARGUMENTS` contains `--section <name>`, skip directly to that section in Path C for an update-only flow. Do not run the path-selection prompt below.
 
-Otherwise, before greeting the user, scan the `documents/` folder. Use Glob with `documents/**/*` and count files per subfolder (`cv/`, `linkedin/`, `diplomas/`, `references/`, `applications/`).
+Otherwise, before greeting the user, scan the `documents/` folder. Use Glob with `documents/**/*` and count files per subfolder (`income/`, `employer/`, `credit/`, `landlord_refs/`, `inquiries/`).
 
 Then welcome the user with a single message that lists three paths. The wording changes based on what was found.
 
 **If `documents/` has files** in one or more subfolders, lead with Path A:
 
-> **Welcome to the AI Job Search setup!**
+> **Welcome to the AI Flat Search setup!**
 >
-> I'll help you build your professional profile so Claude can evaluate job postings, tailor CVs, write cover letters, and prepare you for interviews.
+> I'll help you build your renter profile so Claude can evaluate listings, keep your Mieterselbstauskunft current, write Anschreiben, and prep you for viewings.
 >
-> I see files in your `documents/` folder: [list per subfolder, e.g. "2 in cv/, 1 in linkedin/, 3 in references/"]. Three ways to start:
+> I see files in your `documents/` folder: [list per subfolder, e.g. "2 in income/, 1 in employer/"]. Three ways to start:
 >
-> **Path A: Read my documents folder** (recommended for what you have) - I'll read everything in `documents/`, cross-reference for consistency, and build your profile from real source materials. Idempotent and safe to re-run as you add more documents.
+> **Path A: Read my documents folder** (recommended for what you have) - I'll read everything in `documents/` and build your profile from real source materials. Idempotent and safe to re-run as you add more documents.
 >
-> **Path B: Single CV import** - Paste or @-mention a single CV/resume here. I'll extract it and ask follow-up questions for what's missing.
+> **Path B: Paste your details** - Paste your key facts (income, employer, household) here. I'll extract them and ask follow-up questions for what's missing.
 >
 > **Path C: Interview mode** - I'll walk you through structured questions section by section.
 >
@@ -32,15 +34,15 @@ Then welcome the user with a single message that lists three paths. The wording 
 
 **If `documents/` is empty or missing**, surface Path A as a "do this if you have materials" option:
 
-> **Welcome to the AI Job Search setup!**
+> **Welcome to the AI Flat Search setup!**
 >
-> I'll help you build your professional profile so Claude can evaluate job postings, tailor CVs, write cover letters, and prepare you for interviews.
+> I'll help you build your renter profile so Claude can evaluate listings, keep your Mieterselbstauskunft current, write Anschreiben, and prep you for viewings.
 >
 > Three ways to start:
 >
-> **Path A: Documents folder** (best signal if you have several materials) - Drop your CV / LinkedIn export / diplomas / reference letters in the `documents/` folder, then say "go". I'll read everything and build your profile from it. See `documents/README.md` for the folder layout.
+> **Path A: Documents folder** (best signal if you have several materials) - Drop your payslips, employment contract, Schufa, and any previous landlord reference in the `documents/` folder, then say "go". See `documents/README.md` for the folder layout.
 >
-> **Path B: Single CV import** - Paste or @-mention a single CV/resume here. I'll extract it and ask follow-up questions for what's missing.
+> **Path B: Paste your details** - Tell me your income, employer, household, and move-in date directly in chat.
 >
 > **Path C: Interview mode** - I'll walk you through structured questions section by section. Good if you're starting from scratch.
 >
@@ -52,9 +54,7 @@ Wait for the user's choice. If they pick A but the folder is still empty, tell t
 
 ## Path A: Documents Folder
 
-Reads structured documents in `documents/`, cross-references them for consistency, and merges extracted data into the seven profile skill files. Read-before-write and idempotent: changes already present will not be proposed again.
-
-Follow these steps **exactly in order**.
+Reads documents in `documents/`, cross-references them for consistency, and merges extracted data into the renter profile skill files. Read-before-write and idempotent: changes already present will not be proposed again.
 
 ### Step A1: Inventory
 
@@ -63,308 +63,145 @@ Use Glob with `documents/**/*` to scan the full tree. Print:
 ```
 ## Documents Found
 
-**cv/**: [list files, or "(empty)"]
-**linkedin/**: [list files, or "(empty)"]
-**diplomas/**: [list files, or "(empty)"]
-**references/**: [list files, or "(empty)"]
-**applications/**: [list subfolders with their files, or "(empty)"]
+**income/**: [list files, or "(empty)"]
+**employer/**: [list files, or "(empty)"]
+**credit/**: [list files, or "(empty)"]
+**landlord_refs/**: [list files, or "(empty)"]
+**inquiries/**: [list subfolders with their files, or "(empty)"]
 
-I will read these and cross-reference before proposing any changes.
+I will read these before proposing any changes.
 ```
 
-If every subfolder is empty, stop and tell the user to populate the folder. Point at `documents/README.md` for the layout.
+If every subfolder is empty, stop and tell the user to populate the folder. Point at `documents/README.md`.
 
 ### Step A2: Read Existing Skill Files
 
-Read these in parallel before extracting anything. You must know what is already there to make the merge intelligent.
-
-- `.claude/skills/job-application-assistant/01-candidate-profile.md`
-- `.claude/skills/job-application-assistant/02-behavioral-profile.md`
-- `.claude/skills/job-application-assistant/03-writing-style.md`
-- `.claude/skills/job-application-assistant/04-job-evaluation.md`
-- `.claude/skills/job-application-assistant/05-cv-templates.md`
-- `.claude/skills/job-application-assistant/06-cover-letter-templates.md`
-- `.claude/skills/job-application-assistant/07-interview-prep.md`
+Read these in parallel before extracting anything:
+- `.claude/skills/flat-application-assistant/01-renter-profile.md`
+- `.claude/skills/flat-application-assistant/02-tenant-profile.md`
 
 Hold this content in context throughout Path A. Do not re-read.
 
 ### Step A3: Parse Documents
 
-Read each document found in Step A1. Process subfolders in this order: `cv/`, `linkedin/`, `diplomas/`, `references/`, `applications/`.
+**`income/` documents:** net income figures, employer name, contract type and dates, payslip period.
 
-**`cv/` documents:** name, contact (email, phone, LinkedIn, GitHub), education (degree, institution, dates, thesis), work experience (title, company, dates, location, bullets), skills, publications, awards, profile/summary.
+**`employer/` documents:** new job title, employer name, start date, Sankt Leon-Rot work location, contract type (Probezeit, unbefristet).
 
-**`linkedin/` documents:** About/summary section (full text, used for behavioral inference), work experience, education, skills and endorsements, certifications, volunteer work, publications, recommendations received (full text). If multiple LinkedIn exports are present, use the most recently modified file.
+**`credit/` documents:** Schufa-Bonitätsauskunft date and score/summary if visible.
 
-**`diplomas/` documents:** official degree title and level, institution name (official spelling), graduation date, grade or distinction or GPA if visible.
+**`landlord_refs/` documents:** previous landlord name, tenancy dates, any statement of no arrears (Mietschuldenfreiheitsbescheinigung).
 
-**`references/` documents:** referee name, title, organization; full text of the letter (extract specific quotes); competency language used.
-
-**`applications/<company>_<role>/` subfolders:**
-- `job_posting.md`: role title, company, required skills, experience level, sector, role type
-- `cover_letter.tex`: opening structure, body structure, bullet style, closing, recurring phrases
-- `cv_draft.tex`: profile statement, section ordering, framing for this role type
-- `outcome.md`: status (hired/rejected/no_response/interview_only), interview stages, notes
-
-After reading, proceed to Step A4 without intermediate output. The user sees a complete picture in Step A6.
+**`inquiries/<address-slug>/` subfolders:**
+- `listing.md`: the original listing text
+- `anschreiben.tex`: the Anschreiben sent
+- `outcome.md`: result (viewing offered / rejected / no response / signed) and notes
 
 ### Step A4: Cross-Reference Check
 
-Before mapping anything to skill files, check for inconsistencies:
+Check for inconsistencies before mapping anything:
+- Income figures that disagree across payslips
+- Employer name spelled differently across documents
+- Job start date mismatches between contract and other documents
 
-- Date mismatches between CV / LinkedIn / diploma
-- Title mismatches across documents for the same role
-- Education mismatches (degree name, graduation date)
-- Employer name variations
-
-If inconsistencies are found, present them as a numbered list and wait for the user to resolve each one before continuing:
-
-```
-## Cross-Reference Issues Found
-
-These need to be resolved before I continue. For each one, tell me which version is correct.
-
-1. **Role title mismatch - [COMPANY]:**
-   CV says: "[TITLE_A]"
-   LinkedIn says: "[TITLE_B]"
-   Which is correct?
-
-2. ...
-```
-
-If no inconsistencies, state "No cross-reference issues found." and continue.
+If inconsistencies are found, present them as a numbered list and wait for the user to resolve each one. If none, state "No cross-reference issues found." and continue.
 
 ### Step A5: Build Change Sets
 
-For each skill file, compare extracted document content against the current file content from Step A2. Build two buckets.
+For `01-renter-profile.md` and `02-tenant-profile.md`, compare extracted document content against current file content from Step A2.
 
-**Additive changes:** entirely new content not in the skill file in any form. Examples: a certification not in `01-candidate-profile.md`, a new endorsement skill, a referee not yet listed, a new behavioral quote from a reference letter, a new award.
+**Additive:** new content not in the file in any form (e.g. a Schufa date not yet recorded, a landlord reference not yet listed).
 
-**Conflicting changes:** content that touches something already in a skill file but disagrees. Examples: a different date range for an existing job, a different job title for the same role, a different graduation date than what is recorded.
-
-**Inference rules** (apply when populating from inferred sources):
-
-- **`02-behavioral-profile.md`:** Source is LinkedIn About + recommendation letters. Extract recurring themes, adjectives, phrases about how the candidate works. Add only to "Strongest Behavioral Traits", "How [Candidate] Works Best", or "Management Style Preferences" sections. Do not overwrite existing scored assessments. Always label inferred additions: *[Inferred from LinkedIn About / Reference letter - review before relying on this]*
-- **`03-writing-style.md`:** Source is `cover_letter.tex` files. Extract recurring patterns. Add as observations under "## Patterns Observed in Past Applications". Do not modify existing rules. Only add if 2+ cover letters show a genuine pattern.
-- **`04-job-evaluation.md`:** Source is `job_posting.md` + `outcome.md` pairs. If an application reached interview or offer: note role type and sector as a confirmed strong-fit signal. If 2+ applications repeat a no-response or rejection pattern: note it. Add findings under "## Calibration from Past Applications". Do not modify the existing scoring framework.
-- **`05-cv-templates.md`:** Source is `cv_draft.tex` files. Extract any profile statement that does not already appear in templates. Label with: *[Used for: <company>_<role>]*
-- **`06-cover-letter-templates.md`:** Source is `cover_letter.tex` files. Extract opening patterns, bullet structures, closing formulations. Add only what is structurally distinct from existing templates.
-- **`07-interview-prep.md`:** Source is CV bullets, LinkedIn descriptions, reference letter quotes. Identify achievements not yet covered by an existing STAR example. Do NOT draft full STAR examples. Add stubs under "## STAR Candidates (Complete Manually)":
-
-```markdown
-### [Achievement title]
-**Source:** [CV / LinkedIn / Reference letter - role/company]
-**What happened:** [one sentence]
-**Why it matters:** [interview question types this could answer]
-**S/T/A/R stub:**
-- Situation:
-- Task:
-- Action:
-- Result:
-```
+**Conflicting:** content that disagrees with something already recorded (e.g. a different net income figure, a different job start date).
 
 ### Step A6: Present and Confirm Changes
 
-Present the full change set before writing anything.
+Present the full change set before writing anything, grouped by target file. Then ask:
 
-**Additive changes** (single grouped list, organized by target file):
+> **Apply all additive changes?** Reply **yes** to apply all, or list the numbers you want to skip.
 
-```
-## Proposed Additive Changes
-
-### 01-candidate-profile.md
-- [ ] New certification: [title], [issuer], [date] - extracted from LinkedIn
-- [ ] New reference: [name, title, company]
-  Quote: "[relevant quote]"
-
-### 02-behavioral-profile.md
-- [ ] New behavioral observation [labeled as inference]: "[phrase]"
-
-[and so on per file]
-```
-
-Then ask:
-
-> **Apply all additive changes?** These add new content without touching anything already in the files.
-> Reply **yes** to apply all, or list the numbers you want to skip.
-
-Wait for the response. Apply only the confirmed items.
-
-**Conflicting changes** (one at a time):
-
-```
-## Conflict 1 of [N]: Job title - [COMPANY]
-
-**Current in 01-candidate-profile.md:**
-[TITLE_A] - [COMPANY] ([START]-[END])
-
-**Proposed (from LinkedIn export):**
-[TITLE_B] - [COMPANY] ([START]-[END])
-
-Options:
-  [keep] Keep the existing text
-  [replace] Replace with the version from the document
-  [manual] I'll edit this myself - skip for now
-```
-
-Wait for the user's choice on each conflict. If no conflicts, state "No conflicting changes found." and skip this section.
+For conflicts, present one at a time with `[keep]` / `[replace]` / `[manual]` options, same pattern as additive changes. If no conflicts, state "No conflicting changes found."
 
 ### Step A7: Write Confirmed Changes and Fill Gaps
 
-Apply the confirmed changes with the Edit tool. Make targeted edits only. Do not rewrite entire files. State which changes were applied per file. If a file has no confirmed changes, state "No changes made to [filename]."
+Apply confirmed changes with the Edit tool - targeted edits only, do not rewrite entire files.
 
-Documents cover skills, experience, education, references, and behavioral signal. They do not cover everything `/apply` and `/scrape` need. After the writes, ask follow-up questions for gaps:
+Documents cover income, employment, and credit. They do not cover everything `/apply` needs. After the writes, ask follow-up questions for gaps:
+- Household composition, pets, smoker status
+- Desired move-in date
+- Must-haves, nice-to-haves, deal-breakers
+- Confirm the search defaults: target areas (Karlsruhe, Heidelberg, Mannheim, Bruchsal + corridor towns), max commute to Sankt Leon-Rot, 1.400 € Warmmiete budget, portal priority (Kleinanzeigen + WG-Gesucht primary) - ask if any of these should change rather than re-deriving them from scratch
 
-- Career goals and target role types
-- What excites the user in their next role
-- Deal-breakers and must-haves
-- Salary expectations / baseline (optional)
-- Commute or location constraints (if not visible from CV)
-- Job search configuration (use the questions from Path C Section 9 below)
-
-Then proceed to Step 3 to populate the non-skill files (`CLAUDE.md`, `cv/main_example.tex`, `.claude/skills/job-scraper/search-queries.md`). Step 3 will detect that the seven skill files are already populated and skip those substeps.
+Then proceed to Step 3.
 
 ---
 
-## Path B: Single CV Import
+## Path B: Paste Your Details
 
-If the user provides a single CV/resume:
+If the user pastes their details directly (income, employer, household, move-in date):
 
-1. Read the document thoroughly.
-2. Extract all structured information: name, contact, education, experience, skills, publications, awards.
-3. Present a summary of what was extracted.
-4. Ask follow-up questions for gaps (behavioral profile, career goals, deal-breakers, salary expectations, references).
-5. Proceed to Step 3 (file generation).
+1. Extract all structured information.
+2. Present a summary of what was extracted.
+3. Ask follow-up questions for gaps (creditworthiness, deal-breakers, search criteria confirmation).
+4. Proceed to Step 3.
 
 ---
 
 ## Path C: Interview Mode
 
-Walk through each section conversationally. Ask questions naturally, not as a form. Let the user answer in their own words and you'll structure the data.
+Walk through each section conversationally, not as a form.
 
-### Section 1: Identity & Contact
-Ask about:
-- Full name
-- Location (city, country)
-- Phone, email, LinkedIn, GitHub
-- Languages spoken (with proficiency levels)
-- Current employment status
-- Family/commute constraints (if any)
+### Section 1: Identity & Household
+- Full name, current address, phone, email
+- Household composition, pets, smoker status
+- Languages
 
-### Section 2: Education
-For each degree:
-- Level (PhD, MSc, BSc, etc.), field, institution, years
-- Thesis topic (if applicable)
-- Key coursework or topics
+### Section 2: Employment & Income
+- New job title, employer, start date, Sankt Leon-Rot as the work location
+- Contract type (unbefristet/befristet, Probezeit)
+- Net monthly income
+- Previous job (for continuity in the Selbstauskunft)
+- Any guarantor or additional income
 
-Also ask about certifications (online courses, professional certs).
+### Section 3: Creditworthiness
+- Whether a Schufa-Bonitätsauskunft is already available, or needs to be requested
+- Whether a Mietschuldenfreiheitsbescheinigung from the current landlord is available
+- Years at current address, any rent arrears (should be none)
 
-### Section 3: Professional Experience
-For each role (most recent first):
-- Job title, company, dates, location
-- Key responsibilities (3-5 bullets)
-- Key achievements or projects
-- Technologies/tools used
+### Section 4: Search Configuration
+This generates/confirms the criteria that power `/scrape`. The defaults below are already known from the initial request - confirm them rather than asking from scratch, and only probe deeper on what's genuinely undecided:
 
-Also ask about independent projects, freelance work, or side projects.
-
-### Section 4: Technical Skills
-- Programming languages + proficiency level
-- ML/AI frameworks and tools
-- Domain expertise
-- Software tools and platforms
-- Any other technical skills
-
-### Section 5: Publications & Awards (optional)
-- Peer-reviewed papers, conference presentations
-- Hackathons, competitions, awards
-- Skip if not applicable
-
-### Section 6: Behavioral Profile (optional)
-If they have a formal assessment (PI, DISC, Myers-Briggs, StrengthsFinder):
-- Ask them to describe or share the results
-
-If not, ask behavioral questions:
-- "What work environments do you thrive in?"
-- "What drains your energy at work?"
-- "How do you prefer to work in teams?"
-- "How do you make decisions, quickly or deliberately?"
-- "What's your communication style?"
-- Synthesize answers into a behavioral profile
-
-### Section 7: Career Goals & Preferences
-- Target roles and industries
-- What excites you in work
-- Deal-breakers and must-haves
-- Salary expectations/baseline (optional)
-- What environments to avoid
-- Commute/location constraints
-
-### Section 8: References (optional)
-For each reference:
-- Name, title, company, email, phone
-- Relationship to the user
-
-### Section 9: Job Search Configuration
-This section generates the search queries that power `/scrape`. Use the information from Sections 1, 4, and 7 to build targeted queries.
-
-Ask about:
-- **Role titles to search for:** "What job titles should I search for? For example: Data Scientist, ML Engineer, Geophysicist." Collect 3-8 specific titles.
-- **Key skills as search terms:** "Which of your skills are most likely to appear in job postings?" Pick 3-5 that are distinctive and searchable.
-- **Target companies (optional):** "Are there specific companies you'd like to monitor for openings?"
-- **Geographic scope:** "Which cities or regions should I search in? How far are you willing to commute?" Use this to define the location filter tiers (ideal, acceptable, borderline, too far).
-- **Job portals:** "The framework includes tools for Danish job portals (Jobindex, Jobbank, Jobdanmark, Jobnet). Are these the right ones for you, or do you use other sites?" Note: if the user is outside Denmark, acknowledge that the built-in CLI tools are Denmark-specific and suggest they can add their own portal integrations or rely on LinkedIn/Google site-searches.
-
-**Important:** Also suggest role types the user may not have considered, based on their skill profile. For example:
-- If they have strong Python + domain expertise: "Have you considered roles like 'Technical Consultant' or 'Solutions Engineer' in your domain?"
-- If they have ML + a specific industry: "Companies in adjacent industries also hire for these skills. Should I include searches for [adjacent sector]?"
-- If they have project management experience alongside technical skills: "Would you also want to search for 'Technical Project Manager' or 'Team Lead' roles?"
-
-This proactive suggestion step helps users discover career paths they might not have considered.
+- **Target areas:** Karlsruhe, Heidelberg, Mannheim, Bruchsal - confirm, or ask if corridor towns (Walldorf, Wiesloch, Hockenheim, Schwetzingen, Sankt Leon-Rot) should be included by default or only under "/scrape broad"
+- **Budget:** 1.400 € Warmmiete - confirm this is still accurate
+- **Max commute to Sankt Leon-Rot:** ask for a concrete number (e.g. "30 min by car") - this is not yet known and is needed for `04-flat-evaluation.md` and `search-criteria.md`
+- **Rooms / size:** ask for a preference
+- **Move-in date:** ask for the target date (tie to the new job's start date)
+- **Must-haves / deal-breakers:** ask directly
+- **Portals:** Kleinanzeigen + WG-Gesucht primary, Immowelt secondary, ImmoScout24 best-effort - confirm or ask if the user wants a different priority
 
 ---
 
 ## Step 3: Generate Profile Files
 
-Once data collection is complete, generate or finish populating the following files. **For Path A**, the seven skill files are already populated by Step A7; check each before writing and skip if its content is no longer placeholder text.
+Once data collection is complete, populate the following. **For Path A**, the two skill files are already populated by Step A7; check each before writing and skip if its content is no longer placeholder text.
 
 ### 1. Update `CLAUDE.md`
 Replace all `[PLACEHOLDER]` tokens with the user's actual information. Keep the structure, workflow, and verification checklist intact.
 
-### 2. Populate `01-candidate-profile.md` *(Path B and C; skip if Path A populated it)*
-Write the full candidate profile with structured sections: Identity, Education, Professional Experience, Independent Projects, Technical Skills, Publications, Awards, References.
+### 2. Populate `01-renter-profile.md` *(Path B and C; skip if Path A populated it)*
+Write the full renter profile: identity, household, employment & income, creditworthiness, search profile, references.
 
-### 3. Populate `02-behavioral-profile.md` *(Path B and C; skip if Path A populated it)*
-Write the behavioral profile based on assessment results or synthesized answers.
+### 3. Populate `02-tenant-profile.md` *(Path B and C; skip if Path A populated it)*
+Write the tenant persona based on the collected facts - selling points, how the household presents, things to address proactively.
 
-### 4. Update `04-job-evaluation.md` *(Path B and C; skip if Path A populated it)*
-Replace skill match areas with the user's actual skills:
-- Strong match areas: [their primary skills]
-- Moderate match areas: [their secondary skills]
-- Weak match areas: [skills they lack]
+### 4. Update `.claude/skills/flat-application-assistant/04-flat-evaluation.md`
+Fill in `[YOUR_MAX_COMMUTE]` with the actual commute tolerance.
 
-Update career goals and motivation filters with their actual preferences.
+### 5. Update `selbstauskunft/selbstauskunft_example.tex`
+Replace placeholder personal, employment, and income data with the user's actual details.
 
-### 5. Update `05-cv-templates.md` *(Path B and C; skip if Path A populated it)*
-Add role-specific profile statement templates based on their background.
-
-### 6. Update `07-interview-prep.md` *(Path B and C; skip if Path A populated it)*
-Create STAR examples from their actual experience (at least 3-4 examples). Path A leaves STAR stubs under "## STAR Candidates (Complete Manually)" rather than full examples; if any stubs are present, mention them in Step 4 so the user knows to flesh them out.
-
-### 7. Update `cv/main_example.tex`
-Replace placeholder personal data with their actual name, contact info, and add their education and most recent experience entries.
-
-### 8. Generate `.claude/skills/job-scraper/search-queries.md`
-Replace all placeholder tokens in the search queries file with the user's actual information from Section 9 (or the equivalent follow-up questions in Path A's Step A7):
-- Replace `[YOUR_PRIMARY_ROLE_TYPE]`, `[YOUR_PRIMARY_JOB_TITLE]`, etc. with actual role titles
-- Replace `[YOUR_KEY_SKILL]`, `[YOUR_DOMAIN_KEYWORD_1]`, etc. with actual skills and domain terms
-- Replace `[YOUR_CITY]`, `[YOUR_COUNTRY]`, `[YOUR_REGION]` with actual location
-- Fill in the location filter tiers (ideal, acceptable, borderline, too far) based on commute constraints
-- Organize queries into priority categories matching the user's career direction:
-  - Priority 1: Their strongest/most desired role direction
-  - Priority 2: Their domain expertise
-  - Priority 3: Adjacent roles they could pivot into
-  - Priority 4: Broader roles (wider net)
+### 6. Update `.claude/skills/flat-scraper/search-criteria.md`
+Fill in `[YOUR_MAX_COMMUTE]`. Adjust portal priority or location list only if the user asked for a change from the defaults.
 
 ---
 
@@ -374,33 +211,24 @@ Present a summary:
 
 > **Setup complete!** Here's what was generated:
 >
-> - `CLAUDE.md` - Your full candidate profile
-> - `.claude/skills/job-application-assistant/01-candidate-profile.md` - Structured profile
-> - `.claude/skills/job-application-assistant/02-behavioral-profile.md` - Behavioral assessment
-> - `.claude/skills/job-application-assistant/04-job-evaluation.md` - Personalized evaluation framework
-> - `.claude/skills/job-application-assistant/05-cv-templates.md` - CV templates with your profile statements
-> - `.claude/skills/job-application-assistant/07-interview-prep.md` - STAR examples from your experience
-> - `cv/main_example.tex` - Your LaTeX CV template
-> - `.claude/skills/job-scraper/search-queries.md` - Job search queries for `/scrape`
+> - `CLAUDE.md` - Your full renter profile
+> - `.claude/skills/flat-application-assistant/01-renter-profile.md` - Structured profile
+> - `.claude/skills/flat-application-assistant/02-tenant-profile.md` - Tenant persona
+> - `.claude/skills/flat-application-assistant/04-flat-evaluation.md` - Commute tolerance filled in
+> - `selbstauskunft/selbstauskunft_example.tex` - Your Mieterselbstauskunft
+> - `.claude/skills/flat-scraper/search-criteria.md` - Search criteria for `/scrape`
 >
 > **Try it out:**
-> - Run `/scrape` to search for matching jobs right now
-> - Run `/apply` with a job posting URL to see the full application workflow
-> - Run `/setup --section search` later to update your search queries as your priorities evolve
-
-If Path A left any STAR stubs in `07-interview-prep.md`, also note:
-
-> Path A flagged [N] STAR candidate stubs in `07-interview-prep.md` that need your situation/task/action/result details before you use them in interviews.
+> - Run `/scrape` to search for matching listings right now
+> - Run `/apply` with a listing URL or pasted text to see the full inquiry workflow
+> - Run `/setup --section search` later to update your search criteria as your priorities evolve
 
 ---
 
 ## Design Principles
 
-- Three onboarding paths converge on the same skill files. Step 0 picks the right path based on what's in `documents/`. Steps 3 and 4 are shared.
-- Path A is read-before-write and idempotent. Re-running it as documents are added does not duplicate or overwrite existing content; conflicts are surfaced for explicit resolution.
-- Path A labels inferred behavioral or style additions so the user can review them critically before relying on them.
-- Each section in Path C is a natural conversation, not a form. The user can skip optional sections.
-- Synthesize answers into structured formats (the user does not need to know markdown or LaTeX).
-- Can be re-run with `--section <name>` to update specific sections (e.g., `/setup --section search` to reconfigure job search queries without re-doing the full profile).
-- Section 9 (search) in Path C, and the equivalent follow-up questions in Path A, proactively suggest role types the user may not have considered.
-- At the end, suggest running `/scrape` and `/apply` with a test job posting.
+- Three onboarding paths converge on the same skill files. Step 0 picks the right path based on what's in `documents/`.
+- Path A is read-before-write and idempotent. Conflicts are surfaced for explicit resolution, never silently overwritten.
+- Search criteria (areas, budget, workplace) start pre-filled from the original request - setup confirms and fills the gap (commute tolerance), it does not re-derive what's already known.
+- Can be re-run with `--section <name>` to update specific sections (e.g. `/setup --section search`).
+- At the end, suggest running `/scrape` and `/apply` with a test listing.

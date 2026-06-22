@@ -1,22 +1,24 @@
-# /apply - Drafter-Reviewer Job Application Workflow
+# /apply - Drafter-Reviewer Flat Inquiry Workflow
 
-You are orchestrating a two-agent job application workflow. The job posting is provided below as `$ARGUMENTS` (either a URL or pasted text).
+You are orchestrating a two-agent flat inquiry workflow. The listing is provided below as `$ARGUMENTS` (either a URL or pasted text).
 
 Follow these steps **exactly in order**. Do not skip steps.
 
+**This workflow never sends anything.** It drafts a Selbstauskunft and Anschreiben to disk for the user's review. It does not submit a portal inquiry form, send an email, or message a landlord.
+
 **Token-efficiency rules for this workflow:**
-- Never re-Read a file whose contents are already in your context from an earlier step. If you read it in Step 1, it is still available in Step 2.
+- Never re-Read a file whose contents are already in your context from an earlier step.
 - When dispatching the reviewer agent, pass draft content **inline in the agent prompt** rather than asking the agent to Read files you already have in memory.
-- Run the full verification checklist exactly once, at the end (Step 6). The reviewer focuses on content critique, not verification.
-- Step 5 (compile and inspect PDFs) is mandatory and non-skippable — LaTeX page-break decisions are unpredictable, and `.tex` files that look fine often produce broken PDFs (orphaned entry titles, cover letters spilling to page 2, bullet fonts mismatching).
+- Run the full verification checklist exactly once, at the end (Step 6).
+- Step 5 (compile and inspect PDFs) is mandatory and non-skippable.
 
 ---
 
 ## Step 0: Parse Input
 
-- If `$ARGUMENTS` looks like a URL, use `WebFetch` to retrieve the job posting content.
+- If `$ARGUMENTS` looks like a URL, use `WebFetch` to retrieve the listing content. If the portal blocks the fetch (common for ImmoScout24, occasional on others), ask the user to paste the listing text instead - do not retry the same blocked domain repeatedly.
 - If it is pasted text, use it directly.
-- Extract: **company name**, **role title**, **department** (if mentioned), **location**, and **language** of the posting (Danish or English).
+- Extract: **address/area**, **portal**, **Warmmiete or Kaltmiete + Nebenkosten**, **rooms**, **size (m²)**, **availability date**, **required documents**, **contact channel** (portal message, email, phone).
 - Store these for use throughout the workflow.
 
 ---
@@ -24,134 +26,123 @@ Follow these steps **exactly in order**. Do not skip steps.
 ## Step 1: DRAFTER - Evaluate Fit
 
 Read the evaluation framework:
-- `.claude/skills/job-application-assistant/04-job-evaluation.md`
-- `.claude/skills/job-application-assistant/01-candidate-profile.md`
+- `.claude/skills/flat-application-assistant/04-flat-evaluation.md`
+- `.claude/skills/flat-application-assistant/01-renter-profile.md`
 
-Using the framework from `04-job-evaluation.md`, evaluate the job posting against the candidate's profile. If the salary lookup tool is configured, run:
+Estimate the commute from the listing's address to Sankt Leon-Rot via WebSearch/WebFetch (Google Maps or VRN/KVV journey planner) - do not guess a number.
 
-```bash
-python salary_lookup.py "<Company Name>" --json
-```
+Using the framework from `04-flat-evaluation.md`, evaluate the listing. Present the evaluation to the user with:
 
-If the posting specifies a city, add `--city "<City>"` to narrow results. Parse the JSON output and include the salary benchmark in the evaluation. If the tool is not configured or returns an error, skip the salary benchmark.
+1. **Price fit** - Warmmiete vs. budget (flag if estimated from Kaltmiete)
+2. **Commute fit** - estimated time to Sankt Leon-Rot, by what mode
+3. **Location & area fit**
+4. **Size/layout/must-haves** - pass/fail against deal-breakers
+5. **Application competitiveness** - income multiple, posting freshness
+6. **Overall fit score** and recommendation
 
-Present the evaluation to the user with:
-
-1. **Skills match** - which required/preferred skills match vs. gaps
-2. **Experience match** - how work history maps to the role
-3. **Behavioral/culture match** - how behavioral profile fits the role/company culture
-4. **Salary benchmark** - salary index for the company (if available)
-5. **Overall fit score** and recommendation (strong fit / moderate fit / weak fit)
+**Before presenting the evaluation, check for scam red flags** (`07-besichtigung-prep.md`). If any are present, stop here and tell the user directly instead of proceeding with an evaluation.
 
 After presenting the evaluation, ask the user:
-> "Should I proceed with drafting the CV and cover letter for this role?"
+> "Should I draft the Selbstauskunft and Anschreiben for this listing?"
 
 **If the user says no, stop here.** If yes, continue to Step 2.
 
 ---
 
-## Step 2: DRAFTER - Draft CV + Cover Letter
+## Step 2: DRAFTER - Update Selbstauskunft + Draft Anschreiben
 
-You already have `01-candidate-profile.md` and `04-job-evaluation.md` in context from Step 1. **Do not re-read them.**
+You already have `01-renter-profile.md` and `04-flat-evaluation.md` in context from Step 1. **Do not re-read them.**
 
 Read only the reference files you do not yet have:
-- `.claude/skills/job-application-assistant/03-writing-style.md`
-- `.claude/skills/job-application-assistant/05-cv-templates.md`
-- `.claude/skills/job-application-assistant/06-cover-letter-templates.md`
+- `.claude/skills/flat-application-assistant/03-writing-style.md`
+- `.claude/skills/flat-application-assistant/05-selbstauskunft-templates.md`
+- `.claude/skills/flat-application-assistant/06-anschreiben-templates.md`
+- `.claude/skills/flat-application-assistant/02-tenant-profile.md`
 
-Also read the most recent existing CV and cover letter files for concrete structural reference (one of each is enough):
-- Read any existing `cv/main_*.tex` file as a LaTeX template reference
-- Read any existing `cover_letters/cover_*.tex` or `cover_letters/Cover_*.tex` file as a template reference
+Also read the existing Selbstauskunft for reference:
+- `selbstauskunft/selbstauskunft_example.tex` (or the most recent listing-specific copy)
 
-### CV (`cv/main_<company>.tex`)
-- Always in **English**
-- Follow the moderncv/banking format from `05-cv-templates.md`
-- Tailor the profile statement and experience bullets to the specific role
-- Reframe skills and achievements to match job requirements
-- Keep to 2 pages
+### Selbstauskunft (`selbstauskunft/selbstauskunft_<address-slug>.tex`)
+- Follow `05-selbstauskunft-templates.md`
+- Only Section 5 (move-in date, household framing) should change from the reference copy - everything else must be identical to `01-renter-profile.md`
+- If nothing listing-specific needs to change, tell the user the existing Selbstauskunft already applies rather than creating a near-duplicate file
 
-### Cover Letter (`cover_letters/cover_<company>_<role>.tex`)
-- **Match the language of the job posting** (Danish posting -> Danish cover letter, English posting -> English cover letter)
-- Follow the structure from `06-cover-letter-templates.md`
-- Use the `cover.cls` template
-- Tailor the opening paragraph to the specific role and company
-- Address to a named person if available in the posting, otherwise "Dear Hiring Manager" (or equivalent in posting language)
-- Keep to approximately one page
-- Any mention of agentic coding or AI tooling must reference **Claude Code** by name
+### Anschreiben (`anschreiben/anschreiben_<address-slug>.tex`)
+- Follow the writing style rules in `03-writing-style.md` (critical: no em-dashes, no rental clichés, formal "Sie")
+- Follow the template structure in `06-anschreiben-templates.md`
+- Must reference at least one specific detail from this listing
+- Connect the household's situation (new job in Sankt Leon-Rot) to this specific listing
+- Only mention documents as "attached" if they actually exist per `01-renter-profile.md`
 
-Write both files to disk. Keep the exact text of both drafts in working memory — you will pass them inline to the reviewer in Step 3 and revise them in Step 4 without re-reading.
+Write both files to disk. Keep the exact text in working memory for Steps 3-4.
 
 ---
 
-## Step 3: REVIEWER - Research & Critique
+## Step 3: REVIEWER - Verify & Critique
 
-Use the **Agent tool** to spawn a `general-purpose` reviewer agent. The reviewer gets a fresh context, so pass the drafts **inline in the prompt** below (do not make the reviewer Read them). Scope the reviewer's file reads to content-critique essentials only — the reviewer does not need the LaTeX template files (`05`, `06`) to critique content, since those govern structural/LaTeX concerns the drafter already applied.
+Use the **Agent tool** to spawn a `general-purpose` reviewer agent. The reviewer gets a fresh context, so pass the drafts **inline in the prompt** below.
 
-Replace `<COMPANY>`, `<ROLE>`, `<INSERT_JOB_POSTING_TEXT_HERE>`, `<INSERT_CV_DRAFT_HERE>`, and `<INSERT_COVER_LETTER_DRAFT_HERE>` with actual values before dispatching.
+Replace `<ADDRESS>`, `<PORTAL>`, `<INSERT_LISTING_TEXT_HERE>`, `<INSERT_SELBSTAUSKUNFT_DRAFT_HERE>`, and `<INSERT_ANSCHREIBEN_DRAFT_HERE>` with actual values before dispatching.
 
 ```
-You are a hiring manager proxy reviewing a job application. Your job is to make the application as targeted and compelling as possible.
+You are reviewing a flat rental inquiry before it is sent to a landlord. Your job is to catch errors, generic phrasing, and anything that could read as a scam-adjacent or untrustworthy message - and to make the inquiry as targeted as possible.
 
 ## Your Tasks
 
-### 1. Research the Company
-Use WebSearch and WebFetch to research:
-- The company's website, mission, and recent news
-- The specific department or team (if mentioned in the posting)
-- Any recent projects, press releases, or strategic initiatives relevant to the role
-- Company culture and values
+### 1. Verify the Listing-Specific Claims
+Re-check the listing text below against the Anschreiben draft: does every specific detail mentioned (layout, fittings, location feature) actually appear in the listing? Flag any invented detail.
 
-### 2. Read Reference Materials (content-critique only)
-Read these four files — and only these — to ground your critique:
-- `.claude/skills/job-application-assistant/01-candidate-profile.md`
-- `.claude/skills/job-application-assistant/02-behavioral-profile.md` — use this specifically to check whether the cover letter's voice matches the candidate's natural register. A "Collaborator" PI profile, for example, should not be given a combative, solo-hero tone; a "Persuader" profile should not be given over-hedged, apologetic phrasing.
-- `.claude/skills/job-application-assistant/03-writing-style.md`
-- `.claude/skills/job-application-assistant/04-job-evaluation.md`
+### 2. Check for Scam Red Flags
+Use WebSearch if useful (e.g. to check whether the address/price combination looks plausible for the area). Flag if anything about the listing itself looks like a known rental scam pattern (price far below market, no real address, landlord claiming to be unavailable for viewings).
 
-Do NOT read `05-cv-templates.md` or `06-cover-letter-templates.md` — those govern LaTeX structure the drafter already applied and are not needed for content critique.
+### 3. Read Reference Materials (content-critique only)
+Read these three files - and only these - to ground your critique:
+- `.claude/skills/flat-application-assistant/01-renter-profile.md`
+- `.claude/skills/flat-application-assistant/02-tenant-profile.md`
+- `.claude/skills/flat-application-assistant/03-writing-style.md`
 
-### 3. Drafts to Review
-Both drafts are provided inline below. Do NOT use the Read tool on the draft files — use these exact texts.
+Do NOT read `05-selbstauskunft-templates.md` or `06-anschreiben-templates.md` - those govern LaTeX structure the drafter already applied.
 
-<CV_DRAFT file="cv/main_<COMPANY>.tex">
-<INSERT_CV_DRAFT_HERE>
-</CV_DRAFT>
+### 4. Drafts to Review
+Both drafts are provided inline below. Do NOT use the Read tool on the draft files - use these exact texts.
 
-<COVER_LETTER_DRAFT file="cover_letters/cover_<COMPANY>_<ROLE>.tex">
-<INSERT_COVER_LETTER_DRAFT_HERE>
-</COVER_LETTER_DRAFT>
+<SELBSTAUSKUNFT_DRAFT file="selbstauskunft/selbstauskunft_<ADDRESS>.tex">
+<INSERT_SELBSTAUSKUNFT_DRAFT_HERE>
+</SELBSTAUSKUNFT_DRAFT>
 
-### 4. Job Posting
-<JOB_POSTING>
-<INSERT_JOB_POSTING_TEXT_HERE>
-</JOB_POSTING>
+<ANSCHREIBEN_DRAFT file="anschreiben/anschreiben_<ADDRESS>.tex">
+<INSERT_ANSCHREIBEN_DRAFT_HERE>
+</ANSCHREIBEN_DRAFT>
 
-### 5. Produce Feedback
+### 5. Listing
+<LISTING portal="<PORTAL>">
+<INSERT_LISTING_TEXT_HERE>
+</LISTING>
+
+### 6. Produce Feedback
 
 Return your feedback in **two parts**:
 
-**Part A — Structured edits (preferred format whenever possible):**
-A JSON array of concrete edits the drafter can apply directly without re-reading the files. Each edit is an object:
+**Part A - Structured edits (preferred format whenever possible):**
+A JSON array of concrete edits the drafter can apply directly:
 ```json
 {
-  "file": "cv/main_<COMPANY>.tex" | "cover_letters/cover_<COMPANY>_<ROLE>.tex",
+  "file": "selbstauskunft/selbstauskunft_<ADDRESS>.tex" | "anschreiben/anschreiben_<ADDRESS>.tex",
   "old_string": "<exact text currently in the draft>",
   "new_string": "<replacement text>",
-  "reason": "<one-line rationale: keyword match / company angle / reframing / style>"
+  "reason": "<one-line rationale>"
 }
 ```
-Only use this format when you can quote the exact `old_string` from the drafts above. Make `old_string` unique — include enough surrounding context so it matches exactly once per file.
+Only use this format when you can quote the exact `old_string` from the drafts above, with enough surrounding context to match exactly once per file.
 
-**Part B — Narrative suggestions (for judgment calls that are not mechanical edits):**
-Prose suggestions grouped by category. Produce each category even if your finding is "no issues" — silence on a category can be mistaken for skipping it.
-- **Missed keywords/requirements** — what to add and roughly where, if it cannot be expressed as a clean string replacement
-- **Company/department-specific angles** — connections between experience and the company's strategic priorities, based on your research
-- **Action-oriented reframing** — identify passive, generic, or low-energy statements and suggest action-oriented rewrites. Use this category especially for structural weakness that doesn't fit a single-sentence swap (e.g., "the whole opening paragraph reads as passive — restructure around your single strongest match to the posting").
-- **Tone and style issues** — check against `03-writing-style.md` AND `02-behavioral-profile.md`. Flag any issues with tone, formality, or voice (cliches, hedging, over-humility, inconsistent register), and specifically flag any mismatch between the letter's voice and the candidate's natural register as described in the behavioral profile.
+**Part B - Narrative suggestions:**
+Prose suggestions grouped by category. Produce each category even if your finding is "no issues":
+- **Fabricated or unverifiable listing details** - anything in the Anschreiben not actually supported by the listing text
+- **Scam risk assessment** - any concern about the listing itself, separate from the drafts
+- **Generic phrasing** - rental clichés or copy-paste-sounding lines that don't read as specific to this listing
+- **Tone and consistency issues** - check against `03-writing-style.md` and `02-tenant-profile.md`; flag any inconsistency between the Selbstauskunft and Anschreiben
 
-**CRITICAL RULE:** All suggestions must be grounded in actual profile data. Do NOT suggest fabricating skills, experience, or achievements. If a requirement is a gap, say so honestly and suggest how to frame adjacent experience instead.
-
-Do **not** run a verification checklist — the drafter will do that in the final step. Focus on content critique.
+**CRITICAL RULE:** Do NOT suggest fabricating income, employment, household, or document-availability claims. If something is a genuine gap (e.g. no Schufa yet), say so honestly and suggest how to phrase it ("wird gerne nachgereicht") rather than implying it exists.
 
 Return Part A and Part B together as a single structured message.
 ```
@@ -162,14 +153,13 @@ Return Part A and Part B together as a single structured message.
 
 Once the reviewer agent returns its feedback:
 
-1. **Apply Part A (structured edits) directly with the Edit tool.** Do NOT re-read the draft files — you already have them in context from Step 2, and the reviewer's `old_string` values were quoted from that same text. For each edit in the JSON array, call `Edit` with the given `file`, `old_string`, and `new_string`. Skip any whose rationale would require fabricating content.
-2. **Apply Part B (narrative suggestions)** using judgment. These need interpretation, not mechanical replacement. Walk through every Part B category the reviewer returned and address it:
-   - **Missed keywords/requirements:** add the keyword or capability where it fits naturally in the CV or cover letter. Prefer the experience bullets (concrete evidence) over the profile statement (abstract claim).
-   - **Company/department-specific angles:** weave the reviewer's research into the cover letter opening or motivation paragraph. Verify every company claim via WebFetch/WebSearch before including it — do not trust reviewer research at face value.
-   - **Action-oriented reframing:** rewrite passive or generic phrasing (CV profile statement, cover letter opening, bullet leads). Structural weakness that the reviewer flagged without a clean JSON edit lives here.
-   - **Tone and style issues:** apply the writing-style-guide fixes (no em-dashes, no cliches, no apologetic hedging, consistent first-person active voice).
-   Use Edit for targeted changes; only re-read a file if an edit fails because the surrounding text has shifted.
-3. Do NOT incorporate any suggestion that would fabricate skills or experience. If a posting requirement is a genuine gap, acknowledge it honestly and frame adjacent experience instead.
+1. **Apply Part A (structured edits) directly with the Edit tool.** Do NOT re-read the draft files. Skip any whose rationale would require fabricating content.
+2. **Apply Part B (narrative suggestions)** using judgment:
+   - **Fabricated/unverifiable details:** remove or rephrase to only what the listing text actually supports.
+   - **Scam risk assessment:** if the reviewer raises a real concern, stop and surface it to the user before continuing - do not silently proceed.
+   - **Generic phrasing:** rewrite to reference the specific listing detail more concretely.
+   - **Tone/consistency issues:** apply the writing-style-guide fixes.
+3. Do NOT incorporate any suggestion that would fabricate income, employment, household, or document claims.
 
 After all edits are applied, the two files on disk are the final drafts.
 
@@ -177,17 +167,17 @@ After all edits are applied, the two files on disk are the final drafts.
 
 ## Step 5: DRAFTER - Compile & Inspect PDFs (MANDATORY)
 
-**Never skip this step.** The `.tex` files looking fine is not sufficient — LaTeX page-break decisions are unpredictable and commonly produce broken layouts (orphaned job titles separated from their bullets, cover letters spilling to 2 pages, bullet fonts not matching body text). Compile both documents and visually verify the PDFs before presenting.
+**Never skip this step.**
 
 ### 5a. Compile
 
 ```bash
-cd cv && lualatex -interaction=nonstopmode main_<company>.tex
-cd ../cover_letters && xelatex -interaction=nonstopmode cover_<company>_<role>.tex
+cd selbstauskunft && lualatex -interaction=nonstopmode selbstauskunft_<address-slug>.tex
+cd ../anschreiben && xelatex -interaction=nonstopmode anschreiben_<address-slug>.tex
 ```
 
-- CV uses **lualatex** — pdflatex fails on modern MiKTeX with fontawesome5 font-expansion errors. lualatex handles the same sources cleanly.
-- Cover letter uses **xelatex** — cover.cls requires fontspec.
+- Selbstauskunft uses **lualatex**.
+- Anschreiben uses **xelatex** (cover.cls requires fontspec).
 
 If either compile fails, fix the error and re-compile until clean.
 
@@ -195,28 +185,19 @@ If either compile fails, fix the error and re-compile until clean.
 
 Read both PDFs via the Read tool and verify:
 
-**CV (`cv/main_<company>.pdf`):**
-- [ ] Exactly 2 pages (not 1, not 3)
-- [ ] No orphaned `\cventry` titles — a job/education title line must never sit alone at the bottom of page 1 with its bullets on page 2. This is the most common failure.
-- [ ] Section headings are not isolated at the top of page 2 with only 1-2 lines below
-- [ ] No awkward whitespace gaps
-
-**Cover letter (`cover_letters/cover_<company>_<role>.pdf`):**
+**Selbstauskunft:**
 - [ ] Exactly 1 page
-- [ ] Signature block visible, not cut off or pushed to a second page
+- [ ] No leftover `[PLACEHOLDER]` tokens
+- [ ] Signature line fits at the bottom
+
+**Anschreiben:**
+- [ ] Exactly 1 page
+- [ ] Signature block visible, not cut off
 - [ ] Bullet list font matches surrounding body text (both should be Raleway-Medium)
 
 ### 5c. Iterate until clean
 
-If the layout has problems, edit the `.tex` files and recompile. Common fixes (see `05-cv-templates.md` and `06-cover-letter-templates.md` for full details):
-
-- **Orphaned CV entry title:** `\usepackage{needspace}` in preamble, then `\needspace{5\baselineskip}` immediately before the problematic `\cventry`
-- **CV spills to page 3 with only a trailing section:** `\enlargethispage{2-3\baselineskip}` before a late section
-- **Substantial content on page 3:** cut content using **relevance-weighted cutting** (see `05-cv-templates.md` → "Relevance-weighted cutting"). Score each candidate line by (a) relevance to THIS posting's keywords and responsibilities, (b) uniqueness (is it duplicated elsewhere?), (c) narrative load (does the cover letter depend on it?). Cut the lowest-total-score line first, regardless of section. Do NOT mechanically apply a static section-based priority order — an older-role bullet that hits posting keywords is worth more than a recent-role bullet that does not.
-- **Cover letter itemize breaks compile or uses wrong font:** close `\lettercontent{}` before the list, wrap the list in `{\raggedright\fontspec[Path = OpenFonts/fonts/raleway/]{Raleway-Medium}\fontsize{11pt}{13pt}\selectfont \begin{itemize}...\end{itemize}\par}`
-- **Cover letter spills to 2 pages:** trim using the same relevance-weighted logic. First cut: sentences that restate what a bullet already said. Second cut: a bullet that does not hit posting keywords. Last resort: a bullet that does hit posting keywords. Never reduce geometry or line spacing.
-
-Do not proceed to Step 6 until both PDFs pass inspection.
+See `05-selbstauskunft-templates.md` and `06-anschreiben-templates.md` for common fixes (itemize/fontspec wrapping, vspace adjustments).
 
 ### 5d. Clean up build artifacts
 
@@ -226,21 +207,20 @@ After the final clean compile, delete the `.aux`, `.log`, `.out` files (keep the
 
 ## Step 6: Present Final Output
 
-Run the full verification checklist from `CLAUDE.md` now — this is the **only** verification pass in the workflow. Re-read both files once here to verify final state on disk matches your mental model after the Step 4 and Step 5 edits.
+Run the full verification checklist from `CLAUDE.md` now - this is the **only** verification pass in the workflow.
 
 ### Verification Checklist
-Report pass/fail for each item in the CLAUDE.md verification checklist (factual accuracy, targeting, consistency, quality).
+Report pass/fail for each item in the CLAUDE.md verification checklist.
 
 ### Key Tailoring Decisions
-Summarize 3-5 key decisions made to tailor the application:
-- What was emphasized and why
-- What company-specific angles were incorporated
-- What the reviewer suggested that was most impactful
-- Any gaps that were acknowledged or reframed
+Summarize 2-4 key decisions made to tailor the inquiry:
+- Which listing detail was referenced and why
+- What the reviewer flagged that was most impactful
+- Any scam-risk assessment, even if "no concerns found"
 
 ### Files Created
 List the files written:
-- `cv/main_<company>.tex`
-- `cover_letters/cover_<company>_<role>.tex`
+- `selbstauskunft/selbstauskunft_<address-slug>.tex` (or note that the existing one was reused unchanged)
+- `anschreiben/anschreiben_<address-slug>.tex`
 
-Tell the user: "Both files are ready for your review. Open them to check the final output before compiling."
+Tell the user: "Both files are ready for your review. **You send them yourself** - this workflow never submits an inquiry or contacts the landlord. Open the PDFs to check the final output, then send via whatever channel the listing specifies (portal message, email, or phone first if it's a fast-moving listing - see `07-besichtigung-prep.md`)."
