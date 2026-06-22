@@ -28,7 +28,7 @@ files ready    with fit ratings     + Anschreiben (LaTeX)
                                      (you send it yourself)
 ```
 
-This instance is configured for a specific search: **Karlsruhe, Heidelberg, Mannheim, Bruchsal** (and well-connected towns in between), **max. 1.400 € Warmmiete**, commuting to a new job in **Sankt Leon-Rot**. Change `CLAUDE.md` and `.claude/skills/flat-scraper/search-criteria.md` to point this at a different city, budget, or workplace.
+This instance is configured for a specific search: **Karlsruhe, Heidelberg, Mannheim, Bruchsal** (and well-connected towns in between), **max. 1.400 € Warmmiete**, commuting to a new job in **Walldorf**. Change `CLAUDE.md` and `.claude/skills/flat-scraper/search-criteria.md` to point this at a different city, budget, or workplace.
 
 ## What makes this different from a generic listing alert
 
@@ -124,7 +124,7 @@ ai-flat-search/
 The `/apply` command runs a **drafter-reviewer workflow** with mandatory PDF compilation:
 
 1. **Parse** the listing (URL or text)
-2. **Evaluate fit** against your profile (price, commute to Sankt Leon-Rot, area, size, deal-breakers) and check for scam red flags
+2. **Evaluate fit** against your profile (price, commute to Walldorf, area, size, deal-breakers) and check for scam red flags
 3. **Draft** a Selbstauskunft (mostly static, reused across listings) and a tailored Anschreiben in LaTeX
 4. **Spawn a reviewer agent** that checks listing-detail claims, scam risk, and generic phrasing
 5. **Revise** based on the reviewer's feedback
@@ -153,7 +153,7 @@ Re-runs the search configuration interview without redoing the full profile.
 
 ### Changing the target city/budget/workplace
 
-This fork is configured for Karlsruhe/Heidelberg/Mannheim/Bruchsal, 1.400 € Warmmiete, and a commute to Sankt Leon-Rot. To repoint it elsewhere, edit the "Search Profile" section in `CLAUDE.md` and the location/budget sections in `.claude/skills/flat-scraper/search-criteria.md` and `.claude/skills/flat-application-assistant/04-flat-evaluation.md`.
+This fork is configured for Karlsruhe/Heidelberg/Mannheim/Bruchsal, 1.400 € Warmmiete, and a commute to Walldorf. To repoint it elsewhere, edit the "Search Profile" section in `CLAUDE.md` and the location/budget sections in `.claude/skills/flat-scraper/search-criteria.md` and `.claude/skills/flat-application-assistant/04-flat-evaluation.md`.
 
 ### LaTeX templates
 

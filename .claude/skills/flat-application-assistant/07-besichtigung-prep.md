@@ -34,7 +34,7 @@ Bringing all documents to the viewing itself (rather than promising to send them
 - "Ist der vorgeschlagene Einzugstermin verhandelbar?"
 
 ### About the Neighborhood (if not already researched)
-- "Wie ist die Verkehrsanbindung Richtung Sankt Leon-Rot / Walldorf / Wiesloch?"
+- "Wie ist die Verkehrsanbindung Richtung Walldorf / Sankt Leon-Rot / Wiesloch?"
 - "Wie ist die Parksituation für Anwohner?"
 
 ## Scam Red Flags (take this seriously when relocating from out of town)

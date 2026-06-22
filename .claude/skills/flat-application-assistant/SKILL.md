@@ -19,7 +19,7 @@ When the user provides a listing (URL or text), follow this workflow:
 ### Step 1: Research & Evaluate Fit
 - Fetch the listing content (use WebFetch for URLs; if the portal blocks fetching, ask the user to paste the listing text)
 - Extract: address/area, Warmmiete (or Kaltmiete + Nebenkosten), rooms, size, availability date, required documents, contact channel
-- Estimate commute to Sankt Leon-Rot via WebSearch/WebFetch (Google Maps, VRN/KVV journey planner)
+- Estimate commute to Walldorf via WebSearch/WebFetch (Google Maps, VRN/KVV journey planner)
 - Score the listing against the search profile using the framework in `04-flat-evaluation.md`
 - Present the evaluation table and verdict
 - Flag scam red flags immediately if present (see `07-besichtigung-prep.md`) and stop the workflow if so
@@ -34,7 +34,7 @@ When the user provides a listing (URL or text), follow this workflow:
 - Follow the writing style rules in `03-writing-style.md` (critical: no em-dashes, no rental clichés, reference a specific listing detail)
 - Follow the template structure in `06-anschreiben-templates.md`
 - Create `anschreiben/anschreiben_<address-slug>.tex`
-- Ensure the letter connects the household's situation (new job in Sankt Leon-Rot) to this specific listing
+- Ensure the letter connects the household's situation (new job in Walldorf) to this specific listing
 
 ### Step 4: Viewing Preparation
 - Follow the framework in `07-besichtigung-prep.md`

@@ -22,7 +22,7 @@
 - Reference the one specific listing detail immediately - not in paragraph three.
 
 ### Who is asking (2-3 sentences)
-- Household composition, employment situation, and the concrete reason for the move: new job at [NEW_EMPLOYER] in Sankt Leon-Rot starting [DATE].
+- Household composition, employment situation, and the concrete reason for the move: new job at [NEW_EMPLOYER] in Walldorf starting [DATE].
 - State the desired move-in date plainly.
 
 ### Why this fits / fit signals (bullet list, 3-5 items)

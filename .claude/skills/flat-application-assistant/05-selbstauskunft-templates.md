@@ -51,7 +51,7 @@ Expected output: exactly 1 page. Any other page count is a failure that must be 
 
 \formsection{2. Beruf und Einkommen}
 \field{Beruf}{[JOB_TITLE]}
-\field{Arbeitgeber}{[NEW_EMPLOYER], Sankt Leon-Rot}
+\field{Arbeitgeber}{[NEW_EMPLOYER], Walldorf}
 \field{Beschäftigungsverhältnis}{[unbefristet/befristet seit/ab DATUM]}
 \field{Nettoeinkommen (monatlich)}{[YOUR_NET_INCOME]}
 
@@ -68,7 +68,7 @@ Expected output: exactly 1 page. Any other page count is a failure that must be 
 
 \formsection{5. Angaben zum gewünschten Mietverhältnis}
 \field{Gewünschter Einzugstermin}{[DESIRED_MOVE_IN_DATE]}
-\field{Grund des Umzugs}{Neue Arbeitsstelle bei [NEW_EMPLOYER] in Sankt Leon-Rot ab [START_DATE]}
+\field{Grund des Umzugs}{Neue Arbeitsstelle bei [NEW_EMPLOYER] in Walldorf ab [START_DATE]}
 
 \vspace{14pt}
 \formsection{Erklärung}

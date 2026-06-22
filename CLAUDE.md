@@ -1,10 +1,10 @@
-# Flat Search Assistant for [YOUR_NAME]
+# Flat Search Assistant for Dominik Böhm
 
 <!-- SETUP: This file is populated by running /setup -->
 <!-- After running /setup, all [PLACEHOLDER] tokens will be replaced with your actual information -->
 
 ## Role
-This repo is a flat-hunting workspace ("Wohnungsagent"). Claude acts as a renter's assistant for [YOUR_NAME], helping with:
+This repo is a flat-hunting workspace ("Wohnungsagent"). Claude acts as a renter's assistant for Dominik Böhm, helping with:
 1. **Listing fit evaluation** - Assess flat listings against your search profile (budget, location, commute, household, deal-breakers)
 2. **Mieterselbstauskunft** - Keep your self-disclosure form (renter profile) accurate and ready to attach to inquiries
 3. **Anschreiben drafting** - Draft a personalized inquiry message to the landlord/agent for each listing
@@ -16,34 +16,34 @@ This repo is a flat-hunting workspace ("Wohnungsagent"). Claude acts as a renter
 <!-- This section is auto-populated by /setup. You can also fill it in manually. -->
 
 ### Identity
-- **Name:** [YOUR_NAME]
-- **Current location:** [YOUR_CURRENT_CITY]
-- **Moving because:** New job starting [NEW_JOB_START_DATE] at [NEW_EMPLOYER] in Sankt Leon-Rot
-- **Household:** [YOUR_HOUSEHOLD - e.g. "single", "couple", "1 adult + 1 child"]
-- **Pets:** [YOUR_PETS - or "none"]
-- **Smoker:** [YES/NO]
-- **Languages:** [YOUR_LANGUAGES]
+- **Name:** Dominik Böhm
+- **Current location:** Aachen
+- **Moving because:** New job opportunity at Delos Cloud GmbH in Walldorf - currently in the final (3rd) interview round, not yet offered. Anticipated start date: 01.08.2026
+- **Household:** single
+- **Pets:** none
+- **Smoker:** No
+- **Languages:** Deutsch (Muttersprache), Polnisch (Muttersprache), Englisch (C1)
 
 ### Employment & Income
-- **New role:** [JOB_TITLE] at [NEW_EMPLOYER] - starts [START_DATE]
-- **Employment type:** [unbefristet/befristet/Probezeit details]
-- **Net income (monthly):** [YOUR_NET_INCOME]
-- **Additional income/guarantor (if any):** [DETAILS_OR_NONE]
+- **New role:** SRE (Site Reliability Engineer) at Delos Cloud GmbH - pending, no offer yet (3rd interview round); anticipated start 01.08.2026
+- **Employment type:** unknown until offer (typically unbefristet for SRE roles at this employer size)
+- **Net income (monthly):** ~2.600-2.750 € (estimated from 50.000-52.000 € brutto/Jahr, Steuerklasse 1, no children, no church tax - confirm once a payslip exists; anticipated, tied to the still-pending Delos Cloud role)
+- **Additional income/guarantor (if any):** none
 
 ### Creditworthiness
-- **Schufa-Auskunft available:** [YES/NO - date if available]
-- **Mietschuldenfreiheitsbescheinigung from previous landlord:** [YES/NO]
-- **Previous rental history:** [YEARS_AT_CURRENT_ADDRESS], no outstanding rent arrears
+- **Schufa-Auskunft available:** Yes - 08.06.2026, Score 801 ("Gut")
+- **Mietschuldenfreiheitsbescheinigung from previous landlord:** No, not yet obtained
+- **Previous rental history:** 4 years at current address, no outstanding rent arrears
 
 ### Search Profile
-- **Target areas:** Karlsruhe, Heidelberg, Mannheim, Bruchsal (and well-connected towns in between, e.g. Walldorf, Wiesloch, Hockenheim, Schwetzingen)
-- **Workplace to commute to:** Sankt Leon-Rot
-- **Max commute:** [YOUR_MAX_COMMUTE - e.g. "35 min by car or direct regional train"]
+- **Target areas:** Karlsruhe, Heidelberg, Mannheim, Bruchsal (and well-connected towns in between, e.g. Sankt Leon-Rot, Wiesloch, Hockenheim, Schwetzingen)
+- **Workplace to commute to:** Walldorf
+- **Max commute:** 30 min by car
 - **Budget:** max. **1.400 € Warmmiete** (all-in, including heating/utilities)
-- **Rooms / size:** [YOUR_ROOM_AND_SQM_PREFERENCE]
-- **Move-in date:** [DESIRED_MOVE_IN_DATE]
+- **Rooms / size:** 1-2 Zimmer, ca. 40-60 m²
+- **Move-in date:** 01.08.2026
 - **Must-haves:** [e.g. "EBK (Einbauküche)", "balcony", "unfurnished"]
-- **Deal-breakers:** [e.g. "ground floor only if no elevator", "no WG", "no Kaution above 3 Nettokaltmieten"]
+- **Deal-breakers:** no WG, ground floor only if no elevator, no Kaution above 3 Nettokaltmieten
 
 ### What Excites You About a Listing
 <!-- What makes a listing worth writing to immediately -->
@@ -58,7 +58,7 @@ This repo is a flat-hunting workspace ("Wohnungsagent"). Claude acts as a renter
 
 ## Workflow for New Listings
 1. User provides a listing (URL or pasted text)
-2. **Always evaluate fit first**: price vs. budget, commute to Sankt Leon-Rot, location, size, deal-breakers. Present this assessment to the user before proceeding.
+2. **Always evaluate fit first**: price vs. budget, commute to Walldorf, location, size, deal-breakers. Present this assessment to the user before proceeding.
 3. If good fit: update `selbstauskunft/selbstauskunft_<address>.tex` if needed, and draft `anschreiben/anschreiben_<address>.tex`
 4. **Verify both documents** (see Verification Checklist below)
 5. Prepare viewing (Besichtigung) talking points and questions based on the listing details
@@ -78,7 +78,7 @@ After creating or updating a Selbstauskunft or Anschreiben, re-read the generate
 
 ### Targeting
 - [ ] The Anschreiben opens with or clearly references a specific detail from this listing (not a generic template fill)
-- [ ] The connection between the new job in Sankt Leon-Rot and the desired location/commute is stated naturally, not as a copy-paste line
+- [ ] The connection between the new job in Walldorf and the desired location/commute is stated naturally, not as a copy-paste line
 - [ ] Deal-breakers and must-haves from the search profile are silently respected (do not mention ones that don't apply to this listing)
 
 ### Consistency

@@ -6,30 +6,29 @@
      equivalent of a behavioral/personality profile in a job search. -->
 
 ## Overview
-[YOUR_NAME] presents as a **[reliable / low-maintenance / quiet / sociable - pick what's true]** tenant moving for a confirmed new job, not speculatively. [1-2 SENTENCE_SUMMARY].
+Dominik Böhm presents as a **reliable, low-maintenance** single tenant relocating for a job opportunity in the Rhein-Neckar region, currently in the final interview round rather than already confirmed. IT infrastructure professional (Kubernetes/SRE background), non-smoker, no pets, no household complications.
 
 ## Core Traits Landlords Screen For
 
 | Trait | Status | How to show it (not just claim it) |
 |-------|--------|-------------------------------------|
-| Stable income | [STATUS] | Net income, unbefristeter Vertrag, employer name |
-| Clean rental history | [STATUS] | Mietschuldenfreiheitsbescheinigung, years at current address |
-| Low household risk | [STATUS] | Household size, no pets / well-behaved pet, non-smoker |
-| Genuine, near-term need | [STATUS] | Concrete move date tied to the new job start date in Sankt Leon-Rot |
-| Reachability / responsiveness | [STATUS] | Offer to come for a same-week viewing, respond fast |
+| Stable income | Pending - net income TBD once offer confirmed | Net income, contract type, employer name (once known) |
+| Clean rental history | Strong | 4 years at current address, no arrears; Mietschuldenfreiheitsbescheinigung not yet obtained |
+| Low household risk | Strong | Single occupant, no pets, non-smoker |
+| Genuine, near-term need | Caveated | Move date tied to an anticipated (not yet confirmed) job start in Walldorf - must be phrased honestly, not as a done deal |
+| Reachability / responsiveness | Strong | IT background, comfortable with fast digital communication; can offer a same-week viewing |
 
-## Strongest Selling Points
-- **[POINT_1]:** [e.g. "Confirmed job start date gives a firm, verifiable reason for the move - not a vague relocation"]
-- **[POINT_2]:** [e.g. "Long, clean tenancy history with no arrears"]
-- **[POINT_3]:** [e.g. "Single income earner well above the typical 3x-rent threshold for this budget"]
+- **Clean Bonität:** Schufa score 801 ("Gut"), no rent arrears
+- **Long, stable tenancy history:** 4 years at current address with no issues
+- **Low household risk:** single occupant, no pets, non-smoker - nothing for a landlord to underwrite around
 
 ## How You Come Across
 - [PREFERENCE_1 - e.g. "Prefers direct, low-friction communication - short emails, clear documents, no back-and-forth"]
 - [PREFERENCE_2]
 
 ## Things to Address Proactively (frame matter-of-factly, not defensively)
-- **[AREA_1]:** [e.g. "Moving from outside the region - explain it's a confirmed job, not a guess, and that you can view on short notice"]
-- **[AREA_2]:** [e.g. "Short notice period before move-in - state the exact date plainly and offer flexibility on the contract start"]
+- **Job not yet confirmed:** the Delos Cloud GmbH role is in the final interview round, not signed. Never imply it's confirmed in an Anschreiben - phrase the move as planned around an anticipated opportunity in the region, and lean on the strong Bonität/rental history as the verifiable parts of the application instead.
+- **Moving from outside the region (Aachen to Rhein-Neckar):** explain the move is tied to a concrete professional opportunity in the area, not a speculative relocation, and that a same-week viewing is easy to arrange.
 
 ## Mapping to Listing Language
 
@@ -43,11 +42,11 @@ When a listing uses this language, flag as **friction, not necessarily a deal-br
 - "ab sofort" when the actual move-in date is weeks out (address directly in the Anschreiben rather than ignoring it)
 
 ## Landlord/Agent Interaction Preferences
-- [WHAT_WORKS - e.g. "Comfortable handling everything by email/WhatsApp; happy to call if the landlord prefers it"]
-- [WHAT_DOESN'T - e.g. "Wary of any process that asks for money before a viewing - see 07-besichtigung-prep.md red flags"]
+- Comfortable handling everything by email/WhatsApp; happy to call if the landlord prefers it
+- Wary of any process that asks for money before a viewing - see `07-besichtigung-prep.md` red flags
 
 ## Using This in Anschreiben
-- **Anschreiben:** [HOW_TO_WEAVE_IN_STRENGTHS - e.g. "Lead with the job start date and income stability in the first or second sentence, not buried at the end"]
-- **Selbstauskunft:** [WHAT_TO_EMPHASIZE]
-- **Viewing conversation:** [WHAT_TO_MENTION_IN_PERSON]
-- **Don't overstate:** [e.g. "Don't promise flexibility you don't have on move-in date or rent"]
+- **Anschreiben:** Lead with Bonität and rental history (the verifiable strengths) rather than the job, since the job is not yet confirmed. Mention the anticipated move honestly without overstating certainty.
+- **Selbstauskunft:** Emphasize Schufa score, clean rental history, and household simplicity; leave employment fields open or clearly marked pending until the offer is confirmed - never fill them with the unconfirmed role.
+- **Viewing conversation:** Be upfront if asked about employment status - in the final interview round, expects a decision soon, happy to follow up once confirmed.
+- **Don't overstate:** Don't promise a move-in date or claim an employer/income figure that isn't confirmed yet.

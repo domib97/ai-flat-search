@@ -4,7 +4,7 @@ You are running the onboarding setup for the AI Flat Search framework. Your goal
 
 There are three paths into setup. Step 0 picks the right one; all three converge on Step 3 (file generation) and Step 4 (confirmation).
 
-The search criteria (target areas: Karlsruhe, Heidelberg, Mannheim, Bruchsal; budget: 1.400 € Warmmiete; workplace: Sankt Leon-Rot; primary portals: Kleinanzeigen, WG-Gesucht) are already baked into `CLAUDE.md` and `search-criteria.md` as defaults. Setup only needs to confirm or adjust them, plus collect the personal/financial details that can't be guessed.
+The search criteria (target areas: Karlsruhe, Heidelberg, Mannheim, Bruchsal; budget: 1.400 € Warmmiete; workplace: Walldorf; primary portals: Kleinanzeigen, WG-Gesucht) are already baked into `CLAUDE.md` and `search-criteria.md` as defaults. Setup only needs to confirm or adjust them, plus collect the personal/financial details that can't be guessed.
 
 ---
 
@@ -86,7 +86,7 @@ Hold this content in context throughout Path A. Do not re-read.
 
 **`income/` documents:** net income figures, employer name, contract type and dates, payslip period.
 
-**`employer/` documents:** new job title, employer name, start date, Sankt Leon-Rot work location, contract type (Probezeit, unbefristet).
+**`employer/` documents:** new job title, employer name, start date, Walldorf work location, contract type (Probezeit, unbefristet).
 
 **`credit/` documents:** Schufa-Bonitätsauskunft date and score/summary if visible.
 
@@ -130,7 +130,7 @@ Documents cover income, employment, and credit. They do not cover everything `/a
 - Household composition, pets, smoker status
 - Desired move-in date
 - Must-haves, nice-to-haves, deal-breakers
-- Confirm the search defaults: target areas (Karlsruhe, Heidelberg, Mannheim, Bruchsal + corridor towns), max commute to Sankt Leon-Rot, 1.400 € Warmmiete budget, portal priority (Kleinanzeigen + WG-Gesucht primary) - ask if any of these should change rather than re-deriving them from scratch
+- Confirm the search defaults: target areas (Karlsruhe, Heidelberg, Mannheim, Bruchsal + corridor towns), max commute to Walldorf, 1.400 € Warmmiete budget, portal priority (Kleinanzeigen + WG-Gesucht primary) - ask if any of these should change rather than re-deriving them from scratch
 
 Then proceed to Step 3.
 
@@ -157,7 +157,7 @@ Walk through each section conversationally, not as a form.
 - Languages
 
 ### Section 2: Employment & Income
-- New job title, employer, start date, Sankt Leon-Rot as the work location
+- New job title, employer, start date, Walldorf as the work location
 - Contract type (unbefristet/befristet, Probezeit)
 - Net monthly income
 - Previous job (for continuity in the Selbstauskunft)
@@ -171,9 +171,9 @@ Walk through each section conversationally, not as a form.
 ### Section 4: Search Configuration
 This generates/confirms the criteria that power `/scrape`. The defaults below are already known from the initial request - confirm them rather than asking from scratch, and only probe deeper on what's genuinely undecided:
 
-- **Target areas:** Karlsruhe, Heidelberg, Mannheim, Bruchsal - confirm, or ask if corridor towns (Walldorf, Wiesloch, Hockenheim, Schwetzingen, Sankt Leon-Rot) should be included by default or only under "/scrape broad"
+- **Target areas:** Karlsruhe, Heidelberg, Mannheim, Bruchsal - confirm, or ask if corridor towns (Sankt Leon-Rot, Wiesloch, Hockenheim, Schwetzingen, Walldorf) should be included by default or only under "/scrape broad"
 - **Budget:** 1.400 € Warmmiete - confirm this is still accurate
-- **Max commute to Sankt Leon-Rot:** ask for a concrete number (e.g. "30 min by car") - this is not yet known and is needed for `04-flat-evaluation.md` and `search-criteria.md`
+- **Max commute to Walldorf:** ask for a concrete number (e.g. "30 min by car") - this is not yet known and is needed for `04-flat-evaluation.md` and `search-criteria.md`
 - **Rooms / size:** ask for a preference
 - **Move-in date:** ask for the target date (tie to the new job's start date)
 - **Must-haves / deal-breakers:** ask directly

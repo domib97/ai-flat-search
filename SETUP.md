@@ -60,9 +60,9 @@ All three paths produce the same result: fully populated profile files.
 ### What's already pre-filled
 
 This fork ships pre-configured for a specific search:
-- **Target areas:** Karlsruhe, Heidelberg, Mannheim, Bruchsal (and corridor towns: Walldorf, Wiesloch, Hockenheim, Schwetzingen, Sankt Leon-Rot)
+- **Target areas:** Karlsruhe, Heidelberg, Mannheim, Bruchsal (and corridor towns: Sankt Leon-Rot, Wiesloch, Hockenheim, Schwetzingen, Walldorf)
 - **Budget:** 1.400 € Warmmiete (all-in)
-- **Workplace:** Sankt Leon-Rot
+- **Workplace:** Walldorf
 - **Portal priority:** Kleinanzeigen + WG-Gesucht primary, Immowelt secondary, ImmoScout24 best-effort only
 
 `/setup` confirms these with you rather than re-deriving them from scratch. If you're repointing this fork at a different city, budget, or workplace, say so during setup and it'll update `CLAUDE.md` and `search-criteria.md` accordingly.

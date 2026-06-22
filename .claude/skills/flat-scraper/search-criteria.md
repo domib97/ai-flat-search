@@ -42,15 +42,15 @@ site:wg-gesucht.de Wohnung Mannheim
 site:immowelt.de Wohnung Mannheim miete
 ```
 
-### Priority 4: Bruchsal (and the Sankt Leon-Rot corridor)
+### Priority 4: Bruchsal (and the Walldorf corridor)
 
 ```
 site:kleinanzeigen.de Wohnung Bruchsal Miete
 site:wg-gesucht.de Wohnung Bruchsal
-site:kleinanzeigen.de Wohnung Walldorf OR Wiesloch OR Hockenheim OR Schwetzingen Miete
+site:kleinanzeigen.de Wohnung Walldorf OR Sankt Leon-Rot OR Wiesloch OR Hockenheim OR Schwetzingen Miete
 ```
 
-The corridor towns (Walldorf, Wiesloch, Hockenheim, Schwetzingen, Sankt Leon-Rot itself) are often the best commute-to-price trade-off and should always be included when running "broad" - they are smaller markets with less competition than the four named cities.
+The corridor towns (Sankt Leon-Rot, Wiesloch, Hockenheim, Schwetzingen, Walldorf itself) are often the best commute-to-price trade-off and should always be included when running "broad" - they are smaller markets with less competition than the four named cities.
 
 ## Budget Filter
 
@@ -61,9 +61,9 @@ The corridor towns (Walldorf, Wiesloch, Hockenheim, Schwetzingen, Sankt Leon-Rot
 ## Location Filter
 
 - **Target areas:** Karlsruhe, Heidelberg, Mannheim, Bruchsal
-- **Always-include corridor towns:** Walldorf, Wiesloch, Hockenheim, Schwetzingen, Sankt Leon-Rot
-- **Workplace to commute to:** Sankt Leon-Rot
-- **Max commute:** [YOUR_MAX_COMMUTE] - estimate via WebSearch/WebFetch (Google Maps or VRN/KVV) per listing, do not guess
+- **Always-include corridor towns:** Sankt Leon-Rot, Wiesloch, Hockenheim, Schwetzingen, Walldorf
+- **Workplace to commute to:** Walldorf
+- **Max commute:** 30 min by car - estimate via WebSearch/WebFetch (Google Maps or VRN/KVV) per listing, do not guess
 
 ## Date Filter
 

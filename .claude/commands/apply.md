@@ -29,12 +29,12 @@ Read the evaluation framework:
 - `.claude/skills/flat-application-assistant/04-flat-evaluation.md`
 - `.claude/skills/flat-application-assistant/01-renter-profile.md`
 
-Estimate the commute from the listing's address to Sankt Leon-Rot via WebSearch/WebFetch (Google Maps or VRN/KVV journey planner) - do not guess a number.
+Estimate the commute from the listing's address to Walldorf via WebSearch/WebFetch (Google Maps or VRN/KVV journey planner) - do not guess a number.
 
 Using the framework from `04-flat-evaluation.md`, evaluate the listing. Present the evaluation to the user with:
 
 1. **Price fit** - Warmmiete vs. budget (flag if estimated from Kaltmiete)
-2. **Commute fit** - estimated time to Sankt Leon-Rot, by what mode
+2. **Commute fit** - estimated time to Walldorf, by what mode
 3. **Location & area fit**
 4. **Size/layout/must-haves** - pass/fail against deal-breakers
 5. **Application competitiveness** - income multiple, posting freshness
@@ -71,7 +71,7 @@ Also read the existing Selbstauskunft for reference:
 - Follow the writing style rules in `03-writing-style.md` (critical: no em-dashes, no rental clichés, formal "Sie")
 - Follow the template structure in `06-anschreiben-templates.md`
 - Must reference at least one specific detail from this listing
-- Connect the household's situation (new job in Sankt Leon-Rot) to this specific listing
+- Connect the household's situation (new job in Walldorf) to this specific listing
 - Only mention documents as "attached" if they actually exist per `01-renter-profile.md`
 
 Write both files to disk. Keep the exact text in working memory for Steps 3-4.

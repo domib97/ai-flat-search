@@ -26,7 +26,7 @@ The user triggers this skill by saying things like:
 
 Optional arguments:
 - A focus area, e.g. "/scrape mannheim" or "/scrape bruchsal"
-- "broad" to widen beyond the four named cities into all well-connected towns near Sankt Leon-Rot, e.g. "/scrape broad"
+- "broad" to widen beyond the four named cities into all well-connected towns near Walldorf, e.g. "/scrape broad"
 
 ---
 
@@ -40,7 +40,7 @@ Optional arguments:
 
 ### Step 1: Search
 
-Run **WebSearch** queries from `search-criteria.md`. By default, run the primary portals (Kleinanzeigen, WG-Gesucht) across all four target cities. If the user said "broad", also include the well-connected towns near Sankt Leon-Rot. If the user specified a focus city, prioritize that city across all portals.
+Run **WebSearch** queries from `search-criteria.md`. By default, run the primary portals (Kleinanzeigen, WG-Gesucht) across all four target cities. If the user said "broad", also include the well-connected towns near Walldorf. If the user specified a focus city, prioritize that city across all portals.
 
 For each search:
 - Use `WebSearch` with site-specific queries (`site:kleinanzeigen.de`, `site:wg-gesucht.de`, etc.)
@@ -100,7 +100,7 @@ Found X new listings (Y high, Z medium, W low match).
 ### High-Match Highlights
 For each high-match listing, add 2-3 bullet points:
 - Why it matches the search profile
-- Estimated commute to Sankt Leon-Rot
+- Estimated commute to Walldorf
 - Anything to verify before writing (missing info, ambiguous availability date)
 ```
 
@@ -119,7 +119,7 @@ If the user decides to write to a landlord about a listing, add a row to `flat_s
 
 1. **Never fabricate listings.** Only present listings found via actual WebSearch/WebFetch results.
 2. **Respect deduplication.** Always check `seen_listings.json` AND `flat_search_tracker.csv` before presenting.
-3. **Focus on the configured search areas.** Skip listings clearly outside the commute range to Sankt Leon-Rot, unless the user asks to widen the search.
+3. **Focus on the configured search areas.** Skip listings clearly outside the commute range to Walldorf, unless the user asks to widen the search.
 4. **Only currently available listings.** Skip listings explicitly marked as "reserviert" or "nicht mehr verfügbar".
 5. **Be efficient with WebFetch.** Don't fetch every search result - use titles and snippets to pre-filter before fetching, and never retry a domain that's clearly blocking automated requests.
 6. **No autonomous sending.** This skill only searches and reports. It never contacts a landlord, fills in a portal's inquiry form, or messages anyone - that happens in `/apply` after explicit user approval.

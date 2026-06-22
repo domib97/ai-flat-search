@@ -18,17 +18,17 @@ Compare the listing's **Warmmiete** (or Kaltmiete + estimated Nebenkosten/Heizko
 
 If only Kaltmiete is listed, estimate Warmmiete as Kaltmiete + Nebenkosten (use the listing's stated Nebenkosten if given, otherwise estimate ~2-2.50 €/m² as a placeholder and flag it as an estimate, not a fact, in the evaluation output.
 
-### 2. Commute Fit to Sankt Leon-Rot (0-100)
-- Use WebSearch/WebFetch (e.g. Google Maps, Deutsche Bahn/VRN/KVV journey planner) to estimate door-to-door commute time by car and by public transit from the listing's address to Sankt Leon-Rot.
+### 2. Commute Fit to Walldorf (0-100)
+- Use WebSearch/WebFetch (e.g. Google Maps, Deutsche Bahn/VRN/KVV journey planner) to estimate door-to-door commute time by car and by public transit from the listing's address to Walldorf.
 
 | Score | Meaning |
 |-------|---------|
-| 80-100 | Within [YOUR_MAX_COMMUTE], multiple transport options |
-| 60-79 | Within [YOUR_MAX_COMMUTE], but only one realistic option (e.g. car only) |
-| 40-59 | Slightly over [YOUR_MAX_COMMUTE] |
-| 0-39 | Significantly over [YOUR_MAX_COMMUTE] or requires multiple transfers |
+| 80-100 | Within 30 min by car, multiple transport options |
+| 60-79 | Within 30 min by car, but only one realistic option (e.g. car only) |
+| 40-59 | Slightly over 30 min by car |
+| 0-39 | Significantly over 30 min by car or requires multiple transfers |
 
-Towns directly on the Karlsruhe-Heidelberg-Mannheim corridor or near Sankt Leon-Rot (Walldorf, Wiesloch, Hockenheim, Schwetzingen, Sankt Leon-Rot itself) typically score highest here even if they aren't one of the four named target cities - call this out explicitly when it happens.
+Towns directly on the Karlsruhe-Heidelberg-Mannheim corridor or near Walldorf (Sankt Leon-Rot, Wiesloch, Hockenheim, Schwetzingen, Walldorf itself) typically score highest here even if they aren't one of the four named target cities - call this out explicitly when it happens.
 
 ### 3. Location & Area Fit (0-100)
 - Within target areas (Karlsruhe, Heidelberg, Mannheim, Bruchsal, or a well-connected town in between): PASS baseline
@@ -69,7 +69,7 @@ Present the evaluation as:
 | Dimension | Score | Notes |
 |-----------|-------|-------|
 | Price Fit | XX/100 | [Warmmiete vs budget, note if estimated] |
-| Commute Fit | XX/100 | [commute time by car/transit to Sankt Leon-Rot] |
+| Commute Fit | XX/100 | [commute time by car/transit to Walldorf] |
 | Location & Area | XX/100 | [brief note] |
 | Size/Layout/Must-haves | PASS/FAIL | [which must-haves met/missing] |
 | Application Competitiveness | XX/100 | [posting age, income multiple] |

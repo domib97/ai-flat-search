@@ -84,7 +84,7 @@ The font wrapper is mandatory - if you just move `\begin{itemize}` outside `\let
 
 \lettercontent{mit großem Interesse habe ich Ihr Inserat für [LISTING_SHORT_DESCRIPTION] auf [PORTAL] gesehen. [ONE_SPECIFIC_DETAIL_FROM_THE_LISTING - layout/Ausstattung/Lage].}
 
-\lettercontent{Wir, [HOUSEHOLD_DESCRIPTION], ziehen aufgrund einer neuen Arbeitsstelle bei [NEW_EMPLOYER] in Sankt Leon-Rot um, die [START_DATE] beginnt. Gerne würden wir zum [DESIRED_MOVE_IN_DATE] einziehen.
+\lettercontent{Wir, [HOUSEHOLD_DESCRIPTION], ziehen aufgrund einer neuen Arbeitsstelle bei [NEW_EMPLOYER] in Walldorf um, die [START_DATE] beginnt. Gerne würden wir zum [DESIRED_MOVE_IN_DATE] einziehen.
 
 \begin{itemize}
     \item \textbf{Einkommen:} Nettoeinkommen von [YOUR_NET_INCOME], unbefristetes Arbeitsverhältnis
