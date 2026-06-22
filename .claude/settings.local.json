@@ -5,7 +5,18 @@
       "Skill(flat-scraper)",
       "Bash(lualatex:*)",
       "Bash(xelatex:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "WebSearch",
+      "WebFetch(domain:www.kleinanzeigen.de)",
+      "WebFetch(domain:www.wg-gesucht.de)",
+      "Bash(python3 *)",
+      "WebFetch(domain:www.immowelt.de)",
+      "WebFetch(domain:www.immobilienscout24.de)",
+      "WebFetch(domain:www.google.com)",
+      "Bash(fmtutil-sys --byfmt lualatex)",
+      "Bash(kpsewhich -var-value TEXMFROOT)",
+      "Bash(kpsewhich -var-value TEXMFDIST)",
+      "Bash(find / -xdev -iname \"texmf.cnf\")"
     ]
   }
 }

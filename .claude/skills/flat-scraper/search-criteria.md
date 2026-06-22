@@ -65,6 +65,15 @@ The corridor towns (Sankt Leon-Rot, Wiesloch, Hockenheim, Schwetzingen, Walldorf
 - **Workplace to commute to:** Walldorf
 - **Max commute:** 30 min by car - estimate via WebSearch/WebFetch (Google Maps or VRN/KVV) per listing, do not guess
 
+## Exclude: Furnished Short-Term Sublets (Zwischenmiete)
+
+Dominik needs a permanent, unfurnished, unbefristet (unlimited-term) home for his 01.08.2026 move - not a temporary sublet. **Skip and never present** any listing that:
+
+- Is described as fully furnished - "voll möbliert"/"vollständig möbliert"/"komplett möbliert"/"furnished"/"fully-furnished" (whole-apartment furniture, not just a fitted kitchen), OR
+- States a fixed availability window with both a start AND end date (e.g. "verfügbar ab 12.07. bis 07.09.2026", "available from 12th July until 7th September 2026", "Zwischenmiete", "Untermiete", "befristet auf X Monate")
+
+A listing with only a start date ("available from ...", "frei ab ...") and no end date is fine - that is a normal unlimited-term rental. **Do not treat "teilmöbliert" (partially furnished) as a reason to skip** - in this market it almost always just means a fitted kitchen (EBK), which is one of the must-haves, not a short-term sublet signal. The deal-breaker is specifically a stated **end date**, explicit Zwischenmiete/Untermiete/befristet framing, or a listing described as fully/completely furnished.
+
 ## Date Filter
 
 Only include listings posted within the last 7 days. These portals move fast - a listing older than a week is often already taken even if still shown as active. If a posting date cannot be determined, include it but flag as "date unknown" and treat it as lower priority than dated listings.

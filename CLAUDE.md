@@ -43,7 +43,7 @@ This repo is a flat-hunting workspace ("Wohnungsagent"). Claude acts as a renter
 - **Rooms / size:** 1-2 Zimmer, ca. 40-60 m²
 - **Move-in date:** 01.08.2026
 - **Must-haves:** [e.g. "EBK (Einbauküche)", "balcony", "unfurnished"]
-- **Deal-breakers:** no WG, ground floor only if no elevator, no Kaution above 3 Nettokaltmieten
+- **Deal-breakers:** no WG, ground floor only if no elevator, no Kaution above 3 Nettokaltmieten, no furnished/timed short-term sublets (Zwischenmiete or any listing with a fixed end date, e.g. "available from ... until ...") - only unfurnished, unbefristet (unlimited-term) rentals
 
 ### What Excites You About a Listing
 <!-- What makes a listing worth writing to immediately -->

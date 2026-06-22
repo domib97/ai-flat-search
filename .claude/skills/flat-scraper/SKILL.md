@@ -52,7 +52,8 @@ For each search:
 
 For each promising result from Step 1:
 - Use `WebFetch` to retrieve the listing page (skip if it fails - do not retry repeatedly against the same blocked domain)
-- Extract: **address/area**, **Warmmiete or Kaltmiete + Nebenkosten**, **rooms**, **size (m²)**, **posting date** (or "recent"), **URL**, **portal**, **key requirements** (Schufa needed, pets policy, etc.), **availability date**
+- Extract: **address/area**, **Warmmiete or Kaltmiete + Nebenkosten**, **rooms**, **size (m²)**, **posting date** (or "recent"), **URL**, **portal**, **key requirements** (Schufa needed, pets policy, etc.), **availability date(s)**
+- Skip furnished/timed short-term sublets (Zwischenmiete) - see "Exclude: Furnished Short-Term Sublets" in `search-criteria.md`. Do not add these to `seen_listings.json` and do not present them.
 - Skip if the URL or address+portal combo already exists in `seen_listings.json`
 - Skip if the address already appears in `flat_search_tracker.csv`
 
@@ -121,8 +122,9 @@ If the user decides to write to a landlord about a listing, add a row to `flat_s
 2. **Respect deduplication.** Always check `seen_listings.json` AND `flat_search_tracker.csv` before presenting.
 3. **Focus on the configured search areas.** Skip listings clearly outside the commute range to Walldorf, unless the user asks to widen the search.
 4. **Only currently available listings.** Skip listings explicitly marked as "reserviert" or "nicht mehr verfügbar".
-5. **Be efficient with WebFetch.** Don't fetch every search result - use titles and snippets to pre-filter before fetching, and never retry a domain that's clearly blocking automated requests.
-6. **No autonomous sending.** This skill only searches and reports. It never contacts a landlord, fills in a portal's inquiry form, or messages anyone - that happens in `/apply` after explicit user approval.
+5. **Never present furnished/timed short-term sublets (Zwischenmiete).** Any listing that is furnished or states a fixed end date (e.g. "available from ... until ...") is a deal-breaker per `search-criteria.md` - exclude it entirely, do not surface it even as a "low match".
+6. **Be efficient with WebFetch.** Don't fetch every search result - use titles and snippets to pre-filter before fetching, and never retry a domain that's clearly blocking automated requests.
+7. **No autonomous sending.** This skill only searches and reports. It never contacts a landlord, fills in a portal's inquiry form, or messages anyone - that happens in `/apply` after explicit user approval.
 
 ## Optional: Recurring Checks
 
