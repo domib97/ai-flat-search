@@ -9,7 +9,7 @@ This folder holds your actual renter documents. The `/setup` command reads every
 ```
 documents/
 ├── income/                      # Payslips, proof of income
-├── employer/                    # New job contract / offer letter (Sankt Leon-Rot employer)
+├── employer/                    # New job contract / offer letter (Walldorf employer)
 ├── credit/                      # Schufa-Bonitätsauskunft
 ├── landlord_refs/               # Previous landlord references / Mietschuldenfreiheitsbescheinigung
 ├── inquiries/                   # Past flat inquiries
@@ -45,7 +45,7 @@ The new job's contract or offer letter — the document that actually explains t
 
 **What `/setup` extracts:**
 - Job title
-- Employer name and Sankt Leon-Rot as the work location
+- Employer name and Walldorf as the work location
 - Contract type (unbefristet/befristet, Probezeit)
 - Start date
 
